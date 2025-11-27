@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "Коробки гофрированные",
+    "description": "Прочные коробки для транспортировки",
+    "price": 25,
+    "priceWholesale": [
+      { "quantity": 100, "price": 23 },
+      { "quantity": 500, "price": 20 },
+      { "quantity": 1000, "price": 18 }
+    ],
+    "image": "/placeholder.svg?height=300&width=300",
+    "category": "boxes",
+    "material": "Гофрокартон",
+    "size": "30x20x15 см",
+    "minOrder": 50,
+    "stock": 1000,
+    "rating": 4.5,
+    "sellerId": 1,
+    "inLot": true
+  },
+  {
+    "id": 2,
+    "title": "Пакеты полиэтиленовые",
+    "description": "Упаковочные пакеты высокого качества",
+    "price": 5,
+    "priceWholesale": [
+      { "quantity": 500, "price": 4.5 },
+      { "quantity": 1000, "price": 4 },
+      { "quantity": 5000, "price": 3.5 }
+    ],
+    "image": "/placeholder.svg?height=300&width=300",
+    "category": "bags",
+    "material": "Полиэтилен",
+    "size": "25x35 см",
+    "minOrder": 200,
+    "stock": 5000,
+    "rating": 4.8,
+    "sellerId": 2,
+    "inLot": false
+  },
+  {
+    "id": 3,
+    "title": "Стрейч-пленка",
+    "description": "Пленка для паллетирования грузов",
+    "price": 450,
+    "priceWholesale": [
+      { "quantity": 10, "price": 420 },
+      { "quantity": 50, "price": 400 },
+      { "quantity": 100, "price": 380 }
+    ],
+    "image": "/placeholder.svg?height=300&width=300",
+    "category": "film",
+    "material": "Полиэтилен",
+    "size": "500мм x 300м",
+    "minOrder": 5,
+    "stock": 200,
+    "rating": 4.6,
+    "sellerId": 1,
+    "inLot": true
+  },
+  {
+    "id": 4,
+    "title": "Скотч упаковочный",
+    "description": "Прозрачный скотч для упаковки",
+    "price": 35,
+    "priceWholesale": [
+      { "quantity": 50, "price": 32 },
+      { "quantity": 100, "price": 30 },
+      { "quantity": 500, "price": 28 }
+    ],
+    "image": "/placeholder.svg?height=300&width=300",
+    "category": "tape",
+    "material": "Полипропилен",
+    "size": "48мм x 66м",
+    "minOrder": 20,
+    "stock": 800,
+    "rating": 4.7,
+    "sellerId": 3,
+    "inLot": false
+  },
+  {
+    "id": 5,
+    "title": "Пузырчатая пленка",
+    "description": "Защитная упаковка для хрупких товаров",
+    "price": 120,
+    "priceWholesale": [
+      { "quantity": 10, "price": 110 },
+      { "quantity": 50, "price": 100 },
+      { "quantity": 100, "price": 95 }
+    ],
+    "image": "/placeholder.svg?height=300&width=300",
+    "category": "film",
+    "material": "Полиэтилен",
+    "size": "1.5м x 100м",
+    "minOrder": 5,
+    "stock": 150,
+    "rating": 4.9,
+    "sellerId": 2,
+    "inLot": true
+  },
+  {
+    "id": 6,
+    "title": "Крафт-пакеты",
+    "description": "Экологичные бумажные пакеты",
+    "price": 8,
+    "priceWholesale": [
+      { "quantity": 500, "price": 7 },
+      { "quantity": 1000, "price": 6.5 },
+      { "quantity": 5000, "price": 6 }
+    ],
+    "image": "/placeholder.svg?height=300&width=300",
+    "category": "bags",
+    "material": "Крафт-бумага",
+    "size": "22x30 см",
+    "minOrder": 100,
+    "stock": 3000,
+    "rating": 4.4,
+    "sellerId": 3,
+    "inLot": false
+  }
+]

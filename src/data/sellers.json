@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "ПакЭксперт",
+    "logo": "/placeholder.svg?height=100&width=100",
+    "description": "Крупнейший поставщик упаковочных материалов с 15-летним опытом работы на рынке",
+    "rating": 4.6,
+    "reviews": 234,
+    "location": "Москва",
+    "phone": "+7 (495) 123-45-67",
+    "email": "info@pakexpert.ru",
+    "hasFinancialIssues": false,
+    "productsCount": 150,
+    "paymentTerms": "Оплата по факту, отсрочка до 30 дней",
+    "shippingTerms": "Доставка по всей России, самовывоз",
+    "returnPolicy": "Возврат в течение 14 дней"
+  },
+  {
+    "id": 2,
+    "name": "УпакОпт",
+    "logo": "/placeholder.svg?height=100&width=100",
+    "description": "Оптовые поставки качественной упаковки для бизнеса по выгодным ценам",
+    "rating": 4.8,
+    "reviews": 412,
+    "location": "Санкт-Петербург",
+    "phone": "+7 (812) 987-65-43",
+    "email": "sales@upakopt.ru",
+    "hasFinancialIssues": false,
+    "productsCount": 210,
+    "paymentTerms": "Предоплата 50%, оплата по факту 50%",
+    "shippingTerms": "Бесплатная доставка от 50 000₽",
+    "returnPolicy": "Возврат бракованного товара в течение 7 дней"
+  },
+  {
+    "id": 3,
+    "name": "ТараСнаб",
+    "logo": "/placeholder.svg?height=100&width=100",
+    "description": "Широкий ассортимент упаковочных решений для различных отраслей",
+    "rating": 4.3,
+    "reviews": 187,
+    "location": "Екатеринбург",
+    "phone": "+7 (343) 555-12-34",
+    "email": "order@tarasnab.ru",
+    "hasFinancialIssues": true,
+    "productsCount": 95,
+    "paymentTerms": "100% предоплата",
+    "shippingTerms": "Доставка транспортными компаниями",
+    "returnPolicy": "Возврат только бракованного товара"
+  }
+]
