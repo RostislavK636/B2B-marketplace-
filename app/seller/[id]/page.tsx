@@ -22,7 +22,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
   const seller = {
     id: Number.parseInt(id),
     name: 'ООО "УпакПром"',
-    logo: "/packaging-company-logo.jpg",
+    logo: "packaging-company-logo.jpg",
     rating: 4.9,
     reviews: 342,
     verified: true,
@@ -58,7 +58,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
         id: 1,
         name: "Картонная коробка 40x30x20",
         price: 25,
-        image: "/simple-cardboard-box.png",
+        image: "simple-cardboard-box.png",
         rating: 4.8,
         inStock: true,
         lotAvailable: true,
@@ -67,7 +67,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
         id: 2,
         name: "Гофрокороб 60x40x40",
         price: 45,
-        image: "/corrugated-box.jpg",
+        image: "corrugated-box.jpg",
         rating: 4.7,
         inStock: true,
         lotAvailable: true,
@@ -76,7 +76,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
         id: 3,
         name: "Картонная коробка 30x30x30",
         price: 30,
-        image: "/simple-cardboard-box.png",
+        image: "simple-cardboard-box.png",
         rating: 4.9,
         inStock: true,
         lotAvailable: false,
@@ -85,7 +85,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
         id: 4,
         name: "Коробка для пиццы 40см",
         price: 18,
-        image: "/pizza-box.jpg",
+        image: "pizza-box.jpg",
         rating: 4.6,
         inStock: false,
         lotAvailable: false,
@@ -94,7 +94,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
         id: 5,
         name: "Гофротара 50x50x50",
         price: 55,
-        image: "/corrugated-box.jpg",
+        image: "corrugated-box.jpg",
         rating: 4.8,
         inStock: true,
         lotAvailable: true,
@@ -103,7 +103,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
         id: 6,
         name: "Почтовая коробка Тип А",
         price: 22,
-        image: "/simple-cardboard-box.png",
+        image: "simple-cardboard-box.png",
         rating: 4.7,
         inStock: true,
         lotAvailable: false,
@@ -122,7 +122,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
               <div className="flex flex-col lg:flex-row gap-8 items-start">
                 {/* Logo */}
                 <img
-                  src={seller.logo || "/placeholder.svg"}
+                  src={seller.logo || "placeholder.svg"}
                   alt={seller.name}
                   className="w-32 h-32 rounded-2xl border-2 border-border shadow-sm"
                 />
