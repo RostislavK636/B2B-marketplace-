@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
-// ДОБАВЬТЕ ЭТУ ФУНКЦИЮ
 export async function generateStaticParams() {
   return [
     { id: '1' },
@@ -18,7 +17,6 @@ export async function generateStaticParams() {
 }
 
 export default async function SellerPage({ params }: { params: Promise<{ id: string }> }) {
-  Promise<{ id: string }> }) {
   const { id } = await params
 
   const seller = {
