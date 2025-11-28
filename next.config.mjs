@@ -1,12 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // УБРАЛИ output: 'export' - теперь динамические маршруты будут работать
-  trailingSlash: true,
+  // УБРАТЬ output: 'export' - это главная проблема!
+  trailingSlash: false,
   images: {
     unoptimized: true
-  },
-  basePath: process.env.NODE_ENV === 'production' ? '/B2B-marketplace-' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/B2B-marketplace-/' : '',
+  }
+  // Убрать basePath и assetPrefix для Vercel
 }
 
 export default nextConfig
