@@ -7,6 +7,8 @@ const nextConfig = {
   },
   basePath: process.env.NODE_ENV === 'production' ? '/B2B-marketplace-' : '',
   assetPrefix: process.env.NODE_ENV === 'production' ? '/B2B-marketplace-/' : '',
+
+  dynamicParams: true
 }
 
 export default nextConfig
