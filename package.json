@@ -74,4 +74,12 @@
     "tw-animate-css": "1.3.3",
     "typescript": "^5"
   }
+  {
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next build && next export"
+  }
+}
 }
