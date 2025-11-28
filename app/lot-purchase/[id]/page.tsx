@@ -2,7 +2,6 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { LotPurchaseClient } from "./lot-purchase-client"
 
-// ДОБАВЬТЕ ЭТУ ФУНКЦИЮ
 export async function generateStaticParams() {
   return [
     { id: '1' },
@@ -18,7 +17,7 @@ export default async function LotPurchasePage({ params }: { params: Promise<{ id
 
   const lot = {
     id: Number.parseInt(id),
-        product: {
+    product: {
       name: "Картонная коробка 40x30x20 см",
       image: "/simple-cardboard-box.png",
       description: "Трехслойный гофрокартон, коричневый цвет",
@@ -40,7 +39,6 @@ export default async function LotPurchasePage({ params }: { params: Promise<{ id
       "Возможен возврат бракованных единиц",
       "Срок поставки: 7-10 дней после закрытия лота",
     ],
-  }
   }
 
   return (
