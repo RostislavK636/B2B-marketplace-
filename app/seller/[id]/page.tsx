@@ -1,5 +1,3 @@
-"use client"
-
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -8,7 +6,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
+// ДОБАВЬТЕ ЭТУ ФУНКЦИЮ
+export async function generateStaticParams() {
+  return [
+    { id: '1' },
+    { id: '2' },
+    { id: '3' },
+    { id: '4' },
+    { id: '5' }
+  ]
+}
+
 export default async function SellerPage({ params }: { params: Promise<{ id: string }> }) {
+  Promise<{ id: string }> }) {
   const { id } = await params
 
   const seller = {
