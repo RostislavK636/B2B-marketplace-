@@ -81,20 +81,6 @@ jobs:
           path: ./out
 
 
-      - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
-
-      # ДОБАВЬТЕ ЭТОТ ШАГ - копирование файлов из public
-      - name: Copy public files
-        run: |
-          mkdir -p out/B2B-marketplace-
-          cp -r public/* out/B2B-marketplace-/
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
-
 
   deploy:
     environment:
