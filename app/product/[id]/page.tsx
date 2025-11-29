@@ -22,10 +22,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     reviews: 127,
     inStock: 5000,
     images: [
-  "/B2B-marketplace-/simple-cardboard-box.png",
-  "/B2B-marketplace-/cardboard-box-side-view.jpg",
-  "/B2B-marketplace-/cardboard-box-top-view.jpg", 
-  "/B2B-marketplace-/cardboard-box-stacked.jpg",
+  "simple-cardboard-box.png",
+  "cardboard-box-side-view.jpg",
+  "cardboard-box-top-view.jpg", 
+  "cardboard-box-stacked.jpg",
     ],
     description:
       "Прочная картонная коробка идеально подходит для транспортировки и хранения товаров. Изготовлена из трехслойного гофрокартона марки Т-22, обеспечивающего высокую прочность и защиту содержимого.",
