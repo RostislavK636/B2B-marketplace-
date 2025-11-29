@@ -19,7 +19,7 @@ export default async function LotPurchasePage({ params }: { params: Promise<{ id
     id: Number.parseInt(id),
     product: {
       name: "Картонная коробка 40x30x20 см",
-      image: "/simple-cardboard-box.png",
+      image: "simple-cardboard-box.png",
       description: "Трехслойный гофрокартон, коричневый цвет",
     },
     totalQuantity: 10000,
