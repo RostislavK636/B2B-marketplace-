@@ -8,8 +8,6 @@
     "start": "next start",
     "lint": "eslint .",
     "export": "next build && next export",
-    "build": "next build && npm run copy-public",
-    "copy-public": "mkdir -p out/B2B-marketplace- && cp -r public/* out/B2B-marketplace-/ || true"
   }
 
   },
