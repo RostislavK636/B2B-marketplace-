@@ -22,10 +22,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     reviews: 127,
     inStock: 5000,
     images: [
-  "/simple-cardboard-box.png",
-  "/cardboard-box-side-view.jpg",
-  "/cardboard-box-top-view.jpg", 
-  "/cardboard-box-stacked.jpg",
+      "simple-cardboard-box.png",
+      "cardboard-box-side-view.jpg",
+      "cardboard-box-top-view.jpg", 
+      "cardboard-box-stacked.jpg",
     ],
     description:
       "Прочная картонная коробка идеально подходит для транспортировки и хранения товаров. Изготовлена из трехслойного гофрокартона марки Т-22, обеспечивающего высокую прочность и защиту содержимого.",
@@ -48,7 +48,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     seller: {
       id: 1,
       name: 'ООО "УпакПром"',
-      logo: "/generic-company-logo.png",
+      logo: "generic-company-logo.png",
       rating: 4.9,
       verified: true,
       hasFinancialIssues: false,
@@ -62,10 +62,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   }
 
   const relatedProducts = [
-    { id: 2, name: "Гофрокороб 60x40x40", price: 45, image: "/corrugated-box.jpg", rating: 4.7 },
-    { id: 3, name: "Картонная коробка 30x30x30", price: 30, image: "/simple-cardboard-box.png", rating: 4.9 },
-    { id: 4, name: "Скотч упаковочный прозрачный", price: 85, image: "/clear-packing-tape-roll.png", rating: 4.8 },
-    { id: 5, name: "Воздушно-пузырчатая пленка", price: 120, image: "/bubble-wrap.png", rating: 4.6 },
+    { id: 2, name: "Гофрокороб 60x40x40", price: 45, image: "corrugated-box.jpg", rating: 4.7 },
+    { id: 3, name: "Картонная коробка 30x30x30", price: 30, image: "simple-cardboard-box.png", rating: 4.9 },
+    { id: 4, name: "Скотч упаковочный прозрачный", price: 85, image: "clear-packing-tape-roll.png", rating: 4.8 },
+    { id: 5, name: "Воздушно-пузырчатая пленка", price: 120, image: "bubble-wrap.png", rating: 4.6 },
   ]
 
   return <ProductClient product={product} relatedProducts={relatedProducts} />
