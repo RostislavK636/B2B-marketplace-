@@ -80,7 +80,18 @@ jobs:
         with:
           path: ./out
 
-  # Deployment job
+
+
+      # ДОБАВЬТЕ ЭТОТ ШАГ - копирование файлов из public
+      - name: Copy public files
+        run: |
+          mkdir -p out/B2B-marketplace-
+          cp -r public/* out/B2B-marketplace-/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out  # Deployment job
   deploy:
     environment:
       name: github-pages
