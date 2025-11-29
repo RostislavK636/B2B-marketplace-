@@ -238,7 +238,7 @@ export default async function SellerPage({ params }: { params: Promise<{ id: str
                     <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full">
                       <div className="relative">
                         <img
-                          src={product.image || "/placeholder.svg"}
+                          src={product.image || "placeholder.svg"}
                           alt={product.name}
                           className="w-full aspect-square object-cover"
                         />
