@@ -114,44 +114,44 @@ export default function RegisterPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Имя</label>
-                      <Input placeholder="Иван" />
+                      <Input placeholder="Иван" required />
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-2">Фамилия</label>
-                      <Input placeholder="Иванов" />
+                      <Input placeholder="Иванов" required />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Email</label>
-                    <Input type="email" placeholder="ivan@example.com" />
+                    <Input type="email" placeholder="ivan@example.com" required />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Телефон</label>
-                    <Input type="tel" placeholder="+7 (999) 123-45-67" />
+                    <Input type="tel" placeholder="+7 (999) 123-45-67" required />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Пароль</label>
-                    <Input type="password" placeholder="Минимум 8 символов" />
+                    <Input type="password" placeholder="Минимум 8 символов" required />
                   </div>
 
                   {userType === "seller" && (
                     <>
                       <div>
                         <label className="block text-sm font-medium mb-2">Название компании</label>
-                        <Input placeholder="ООО &quot;Моя компания&quot;" />
+                        <Input placeholder='ООО "Моя компания"' required />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">ИНН</label>
-                        <Input placeholder="1234567890" />
+                        <Input placeholder="1234567890" required />
                       </div>
                     </>
                   )}
 
                   <div className="flex items-start gap-2">
-                    <Checkbox id="terms" />
+                    <Checkbox id="terms" required />
                     <label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
                       Я согласен с{" "}
                       <Link href="/terms" className="text-primary hover:underline">
