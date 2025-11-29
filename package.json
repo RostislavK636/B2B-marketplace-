@@ -8,8 +8,6 @@
     "start": "next start",
     "lint": "eslint .",
     "export": "next build && next export"
-  }
-
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
