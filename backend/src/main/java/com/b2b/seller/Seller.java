@@ -1,4 +1,4 @@
-package com.b2b.backend.seller;
+package com.b2b.seller;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

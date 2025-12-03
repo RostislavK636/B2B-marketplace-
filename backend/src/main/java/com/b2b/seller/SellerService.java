@@ -1,7 +1,9 @@
-package com.b2b.backend.seller;
+package com.b2b.seller;
 
-import com.b2b.backend.registration.RegistrationRequest;
+import com.b2b.registration.RegistrationRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SellerService {
@@ -24,5 +26,9 @@ public class SellerService {
                 .build();
 
         sellerRepository.save(seller);
+    }
+
+    public List<Seller> getAllSellers() {
+        return sellerRepository.findAll();
     }
 }

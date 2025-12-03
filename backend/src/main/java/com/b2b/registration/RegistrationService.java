@@ -1,6 +1,6 @@
-package com.b2b.backend.registration;
+package com.b2b.registration;
 
-import com.b2b.backend.seller.SellerService;
+import com.b2b.seller.SellerService;
 import org.springframework.stereotype.Service;
 
 @Service

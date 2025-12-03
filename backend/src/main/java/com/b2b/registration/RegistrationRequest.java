@@ -1,4 +1,4 @@
-package com.b2b.backend.registration;
+package com.b2b.registration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

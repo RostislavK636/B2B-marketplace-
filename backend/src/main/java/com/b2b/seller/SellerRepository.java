@@ -1,4 +1,4 @@
-package com.b2b.backend.seller;
+package com.b2b.seller;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

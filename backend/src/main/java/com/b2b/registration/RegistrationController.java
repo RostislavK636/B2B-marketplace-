@@ -1,6 +1,5 @@
-package com.b2b.backend.registration;
+package com.b2b.registration;
 
-import com.b2b.backend.seller.SellerService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
