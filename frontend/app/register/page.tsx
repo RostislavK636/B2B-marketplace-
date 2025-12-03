@@ -8,9 +8,58 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
   const [userType, setUserType] = useState<"buyer" | "seller" | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const router = useRouter()
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError("")
+
+    const formData = new FormData(e.currentTarget)
+
+    const requestData = {
+      name: formData.get("firstName") as string,
+      surname: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      phoneNumber: formData.get("phone") as string,
+      password: formData.get("password") as string,
+      company: userType === "seller" ? formData.get("companyName") as string : null,
+      taxpayerId: userType === "seller" ? formData.get("inn") as string : null,
+      userType: userType
+    }
+
+    try {
+      const response = await fetch('/api/v1/registration', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      })
+
+      if (response.ok) {
+        router.push("/catalog")
+      } else {
+        try {
+          const text = await response.text()
+          setError(text || `Ошибка сервера: ${response.status}`)
+        } catch {
+          setError(`Ошибка сервера: ${response.status}`)
+        }
+      }
+    } catch (error) {
+      console.error("Ошибка при отправке:", error)
+      setError("Не удалось подключиться к серверу. Проверьте подключение.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -110,48 +159,94 @@ export default function RegisterPage() {
                   </Button>
                 </div>
 
-                <form className="space-y-4">
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md">
+                    {error}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Имя</label>
-                      <Input placeholder="Иван" required />
+                      <Input
+                        name="firstName"
+                        placeholder="Иван"
+                        required
+                        disabled={isLoading}
+                      />
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-2">Фамилия</label>
-                      <Input placeholder="Иванов" required />
+                      <Input
+                        name="lastName"
+                        placeholder="Иванов"
+                        required
+                        disabled={isLoading}
+                      />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Email</label>
-                    <Input type="email" placeholder="ivan@example.com" required />
+                    <Input
+                      type="email"
+                      name="email"
+                      placeholder="ivan@example.com"
+                      required
+                      disabled={isLoading}
+                    />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Телефон</label>
-                    <Input type="tel" placeholder="+7 (999) 123-45-67" required />
+                    <Input
+                      type="tel"
+                      name="phone"
+                      placeholder="+7 (999) 123-45-67"
+                      required
+                      disabled={isLoading}
+                    />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Пароль</label>
-                    <Input type="password" placeholder="Минимум 8 символов" required />
+                    <Input
+                      type="password"
+                      name="password"
+                      placeholder="Минимум 8 символов"
+                      required
+                      disabled={isLoading}
+                      minLength={8}
+                    />
                   </div>
 
                   {userType === "seller" && (
                     <>
                       <div>
                         <label className="block text-sm font-medium mb-2">Название компании</label>
-                        <Input placeholder='ООО "Моя компания"' required />
+                        <Input
+                          name="companyName"
+                          placeholder='ООО "Моя компания"'
+                          required
+                          disabled={isLoading}
+                        />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">ИНН</label>
-                        <Input placeholder="1234567890" required />
+                        <Input
+                          name="inn"
+                          placeholder="1234567890"
+                          required
+                          disabled={isLoading}
+                          pattern="[0-9]{10,12}"
+                        />
                       </div>
                     </>
                   )}
 
                   <div className="flex items-start gap-2">
-                    <Checkbox id="terms" required />
+                    <Checkbox id="terms" required disabled={isLoading} />
                     <label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
                       Я согласен с{" "}
                       <Link href="/terms" className="text-primary hover:underline">
@@ -164,8 +259,13 @@ export default function RegisterPage() {
                     </label>
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full">
-                    Зарегистрироваться
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Регистрация..." : "Зарегистрироваться"}
                   </Button>
                 </form>
               </CardContent>
