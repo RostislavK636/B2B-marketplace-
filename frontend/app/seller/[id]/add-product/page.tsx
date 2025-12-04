@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
 type PriceRange = {
   id: string
@@ -120,6 +122,7 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Header />
       <main className="flex-1 py-8">
         <div className="container mx-auto px-4 max-w-4xl">
           <h1 className="text-2xl font-bold mb-6">Добавить товар</h1>
@@ -265,6 +268,7 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
           </form>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }
