@@ -5,13 +5,14 @@ services:
     environment:
       POSTGRES_USER: paulzverev
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: seller
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - app-network
     restart: unless-stopped
   pgadmin:
     container_name: pgadmin
@@ -25,11 +26,21 @@ services:
     ports:
       - "5050:80"
     networks:
-      - postgres
+      - app-network
     restart: unless-stopped
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    restart: unless-stopped
+    depends_on:
+      - postgres
 
 networks:
-  postgres:
+  app-network:
     driver: bridge
 
 volumes:
