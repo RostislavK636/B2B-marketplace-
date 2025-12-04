@@ -125,7 +125,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
 
               <div className="space-y-3">
                 <Button size="lg" className="w-full text-lg h-14 shadow-sm" asChild>
-                  <Link href={`/lot-purchase/${product.id}`}>Куппить </Link>
+                  <Link href={`/lot-purchase/${product.id}`}>Купить </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="w-full text-lg h-14 bg-transparent">
                   Добавить в запрос
