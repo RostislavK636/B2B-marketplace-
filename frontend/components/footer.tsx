@@ -6,7 +6,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-bold text-primary mb-4">PackMarket</h3>
+            <h3 className="text-xl font-bold text-primary mb-4">Pack&Roll</h3>
             <p className="text-muted-foreground text-sm">B2B маркетплейс упаковки с лотовой закупкой</p>
           </div>
 
@@ -45,14 +45,14 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Контакты</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>support@packmarket.ru</li>
+              <li>support@Pack&Roll.ru</li>
               <li>+7 (800) 123-45-67</li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-          © 2025 PackMarket. Все права защищены.
+          © 2025 Pack&Roll. Все права защищены.
         </div>
       </div>
     </footer>

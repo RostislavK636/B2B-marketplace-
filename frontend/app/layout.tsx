@@ -8,7 +8,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "PackMarket - Маркетплейс Упаковки",
+  title: "Pack&Roll - Маркетплейс Упаковки",
   description: "B2B маркетплейс упаковки с лотовой закупкой",
   generator: "v0.app",
   icons: {

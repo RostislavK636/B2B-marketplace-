@@ -1,3 +1,6 @@
+
+
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -123,3 +126,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+@supports (color: color-mix(in lab, red, red)) {
+    .from-primary\/10 {
+        --tw-gradient-from: color-mix(in oklab, var(--primary) 100%, transparent);
+    }
+    .from-primary\/10 {
+        --tw-gradient-from: color-mix(in oklab, var(--primary) 100%, transparent);
+    }
+}
+
+
+
+    
+
