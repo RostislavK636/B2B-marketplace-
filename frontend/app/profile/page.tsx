@@ -192,7 +192,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                   {products.length}
                 </Badge>
               </div>
-              <Link href={`/seller/${sellerId}/add-product`}>
+              <Link href={`profile/add-product`}>
                 <Button className="gap-2">
                   <Plus className="w-4 h-4" />
                   Добавить товар

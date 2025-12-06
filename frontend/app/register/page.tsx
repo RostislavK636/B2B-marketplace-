@@ -45,7 +45,7 @@ export default function RegisterPage() {
       })
 
       if (response.ok) {
-        router.push("/catalog")
+        router.push("/profile")
       } else {
         try {
           const text = await response.text()

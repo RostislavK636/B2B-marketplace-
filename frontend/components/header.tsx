@@ -21,7 +21,7 @@ export function Header() {
           <Link href="/register" className="text-foreground hover:text-primary transition-colors">
             Регистрация
           </Link>
-          <Link href="/seller/1/dashboard" className="text-foreground hover:text-primary transition-colors">
+          <Link href="/profile" className="text-foreground hover:text-primary transition-colors">
           Личный кабинет
           </Link>
         </nav>
