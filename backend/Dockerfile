@@ -1,10 +1,14 @@
 FROM eclipse-temurin:17-jdk-alpine
+
 WORKDIR /app
 
-# Копируем только pom.xml для кэширования зависимостей
-COPY pom.xml .
+# Копируем файлы Maven Wrapper с правильными правами
 COPY mvnw .
 COPY .mvn .mvn
+RUN chmod +x mvnw  # ДАВАЕМ ПРАВА НА ВЫПОЛНЕНИЕ!
+
+# Копируем pom.xml для кэширования зависимостей
+COPY pom.xml .
 
 # Скачиваем зависимости
 RUN ./mvnw dependency:go-offline -B
@@ -15,5 +19,8 @@ COPY src ./src
 # Собираем приложение
 RUN ./mvnw clean package -DskipTests
 
-# Запускаем
-ENTRYPOINT ["java", "-jar", "target/backend.jar"]
+# Копируем собранный JAR
+RUN cp target/*.jar app.jar
+
+# Запускаем приложение
+ENTRYPOINT ["java", "-jar", "app.jar"]
