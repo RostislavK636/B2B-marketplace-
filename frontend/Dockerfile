@@ -1,40 +1,39 @@
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Копируем файлы зависимостей
+# Копируем package файлы
 COPY package*.json ./
-COPY package-lock.json ./
+COPY package-lock.json* ./
 
 # Устанавливаем зависимости
 RUN npm ci --only=production
 
-# Копируем весь код
+# Копируем остальные файлы
 COPY . .
 
 # Устанавливаем dev зависимости для сборки
 RUN npm ci --only=development
 
-# Собираем приложение
+# Собираем Next.js
 RUN npm run build
 
 # Production образ
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Создаем пользователя node для безопасности
+# Создаем пользователя для безопасности
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Копируем собранное приложение и зависимости
+# Копируем собранное приложение
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# Переключаемся на непривилегированного пользователя
 USER nextjs
 
 EXPOSE 3000
