@@ -11,8 +11,6 @@ import java.util.List;
 public class ProductSaveRequest {
 
     private String name;
-    private Float averageRating;
-    private Long numberOfReviews;
     private Long availability;
     private String description;
     private List<ProductPriceRange> productPriceRanges;

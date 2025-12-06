@@ -14,7 +14,7 @@ public class SellerService {
         this.sellerRepository = sellerRepository;
     }
 
-    public void signUpSeller(RegistrationRequest registrationRequest) {
+    public Seller signUpSeller(RegistrationRequest registrationRequest) {
         Seller seller = Seller.builder()
                 .name(registrationRequest.getName())
                 .surname(registrationRequest.getSurname())
@@ -25,7 +25,7 @@ public class SellerService {
                 .taxpayerId(registrationRequest.getTaxpayerId())
                 .build();
 
-        sellerRepository.save(seller);
+        return sellerRepository.save(seller);
     }
 
     public List<Seller> getAllSellers() {

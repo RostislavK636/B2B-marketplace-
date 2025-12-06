@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,12 +11,55 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
 export default function CatalogPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [category, setCategory] = useState("all")
-  const [material, setMaterial] = useState("all")
-  const [priceRange, setPriceRange] = useState("all")
-  const [sortBy, setSortBy] = useState("popular")
-
+  const router = useRouter()
+  const [authChecked, setAuthChecked] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")  // ← ВЫНЕСЕНО НАВЕРХ
+  const [category, setCategory] = useState("all")     // ← ВЫНЕСЕНО НАВЕРХ
+  const [material, setMaterial] = useState("all")     // ← ВЫНЕСЕНО НАВЕРХ
+  const [priceRange, setPriceRange] = useState("all") // ← ВЫНЕСЕНО НАВЕРХ
+  const [sortBy, setSortBy] = useState("popular")     // ← ВЫНЕСЕНО НАВЕРХ
+  
+  // Проверка авторизации при загрузке
+  useEffect(() => {
+    checkAuth()
+  }, [])
+  
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/v1/auth', {
+        method: 'GET',
+        credentials: 'include',  // Важно! Отправляем куки
+      })
+      
+      const data = await response.json()
+      
+      if (!data.authenticated) {
+        // Если не авторизован - на страницу регистрации
+        router.push('/register')
+      } else {
+        // Если авторизован - показываем страницу
+        setAuthChecked(true)
+        console.log('Авторизован как:', data.sellerEmail || data.userEmail)
+      }
+    } catch (error) {
+      console.error('Ошибка проверки авторизации:', error)
+      router.push('/register')
+    }
+  }
+  
+  // Показываем загрузку пока проверяем авторизацию
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Проверка авторизации...</p>
+        </div>
+      </div>
+    )
+  }
+  
+  // Остальной код компонента
   const products = [
     {
       id: 1,

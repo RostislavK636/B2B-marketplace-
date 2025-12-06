@@ -1,5 +1,6 @@
 package com.b2b.registration;
 
+import com.b2b.seller.Seller;
 import com.b2b.seller.SellerService;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class RegistrationService {
         this.sellerService = sellerService;
     }
 
-    public void register(RegistrationRequest registrationRequest) {
-        sellerService.signUpSeller(registrationRequest);
+    public Seller register(RegistrationRequest registrationRequest) {
+        return sellerService.signUpSeller(registrationRequest);
     }
 }

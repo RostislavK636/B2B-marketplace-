@@ -14,8 +14,8 @@ public class ProductService {
     public void saveProduct(ProductSaveRequest productSaveRequest) {
         Product product = Product.builder()
                 .name(productSaveRequest.getName())
-                .averageRating(productSaveRequest.getAverageRating())
-                .numberOfReviews(productSaveRequest.getNumberOfReviews())
+                .averageRating(0F)
+                .numberOfReviews(0L)
                 .availability(productSaveRequest.getAvailability())
                 .description(productSaveRequest.getDescription())
                 .productPriceRanges(productSaveRequest.getProductPriceRanges())
