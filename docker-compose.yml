@@ -63,9 +63,6 @@ services:
     networks:
       - app-network
     restart: unless-stopped
-    depends_on:
-      - frontend
-      - backend
 
 networks:
   app-network:
