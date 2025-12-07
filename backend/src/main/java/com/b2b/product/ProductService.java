@@ -1,17 +1,20 @@
 package com.b2b.product;
 
+import com.b2b.seller.SellerService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final SellerService sellerService;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, SellerService sellerService) {
         this.productRepository = productRepository;
+        this.sellerService = sellerService;
     }
 
-    public void saveProduct(ProductSaveRequest productSaveRequest) {
+    public void saveProduct(ProductSaveRequest productSaveRequest, Long sellerId) {
         Product product = Product.builder()
                 .name(productSaveRequest.getName())
                 .averageRating(0F)
@@ -19,7 +22,7 @@ public class ProductService {
                 .availability(productSaveRequest.getAvailability())
                 .description(productSaveRequest.getDescription())
                 .productPriceRanges(productSaveRequest.getProductPriceRanges())
-                .seller(productSaveRequest.getSeller())
+                .seller(sellerService.getSellerById(sellerId))
                 .productDetails(productSaveRequest.getProductDetails())
                 .detailedDescription(productSaveRequest.getDetailedDescription())
                 .build();

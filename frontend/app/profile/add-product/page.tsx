@@ -138,35 +138,68 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
     return Object.keys(e).length === 0
   }
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!validate()) {
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
 
+    // Формируем данные для отправки на бэкенд
     const payload = {
       name: name.trim(),
       availability: Number(availability),
       description: description.trim(),
       detailedDescription: detailedDescription.trim(),
-      specs,
-      pricing: ranges.map((r) => ({
-        min: Number(r.min),
-        max: r.max === '' || r.max === null ? null : Number(r.max),
+      productDetails: {
+        size: specs.size,
+        weight: specs.weight,
+        minimumOrderStartsFrom: Number(specs.minOrder) || 1, // Используем правильное имя поля из Java сущности
+        material: specs.material,
+        color: specs.color,
+        loadCapacity: specs.loadCapacity
+      },
+      productPriceRanges: ranges.map((r) => ({
+        min: Number(r.min), // Предполагаю что в Java классе ProductPriceRange поле называется min
+        max: r.max === '' || r.max === null ? null : Number(r.max), // max может быть null
         price: Number(r.price),
       })),
-      sellerId: params?.id ?? authData?.sellerId ?? null,
+      // sellerId не отправляем - он будет взят из куки на сервере
     }
 
     console.log('Create product payload', payload)
+    
     try {
-      localStorage.setItem('lastProductPayload', JSON.stringify(payload))
-    } catch (err) {
-      // Игнорируем ошибки localStorage
+      // Отправляем POST запрос на сервер
+      const response = await fetch('/api/v1/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Важно для передачи кук
+        body: JSON.stringify(payload),
+      })
+
+      if (response.ok) {
+        // Успешный ответ
+        router.push(`/profile`)
+      } else {
+        // Ошибка от сервера
+        const errorData = await response.json()
+        alert(`Ошибка: ${errorData.message || 'Не удалось добавить товар'}`)
+        console.error('Ошибка сервера:', errorData)
+      }
+    } catch (error) {
+      console.error('Ошибка при отправке запроса:', error)
+      alert('Произошла ошибка при отправке данных. Проверьте консоль для подробностей.')
+      
+      // На всякий случай сохраняем в localStorage для отладки
+      try {
+        localStorage.setItem('lastProductPayload', JSON.stringify(payload))
+      } catch (err) {
+        // Игнорируем ошибки localStorage
+      }
     }
-    alert('Данные валидны. Payload сохранён в localStorage и выведен в консоль.')
-    router.push(`/seller/${params?.id ?? authData?.sellerId ?? ''}`)
   }
 
   return (

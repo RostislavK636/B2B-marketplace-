@@ -1,6 +1,5 @@
 package com.b2b.product;
 
-import com.b2b.seller.Seller;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,7 +13,6 @@ public class ProductSaveRequest {
     private Long availability;
     private String description;
     private List<ProductPriceRange> productPriceRanges;
-    private Seller seller;
     private ProductDetails productDetails;
     private String detailedDescription;
 }

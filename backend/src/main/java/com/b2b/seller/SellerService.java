@@ -31,4 +31,9 @@ public class SellerService {
     public List<Seller> getAllSellers() {
         return sellerRepository.findAll();
     }
+
+    public Seller getSellerById(Long sellerId) {
+        return sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new IllegalStateException("seller not found"));
+    }
 }

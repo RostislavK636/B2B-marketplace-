@@ -14,8 +14,8 @@ import java.util.Map;
 public class AuthenticationController {
 
     @GetMapping
-    public ResponseEntity<?> auth(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public ResponseEntity<?> auth(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
 
         if (session == null || session.getAttribute("sellerId") == null) {
             return ResponseEntity.ok(Map.of(
