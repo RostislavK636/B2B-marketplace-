@@ -1,11 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Trash2, Plus, Package } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
@@ -25,14 +26,136 @@ type Document = {
   verified: boolean
 }
 
+type AuthData = {
+  authenticated: boolean
+  sellerEmail?: string
+  userEmail?: string
+  sellerId?: string
+}
+
 export default function SellerDashboard({ params }: { params?: { id?: string } }) {
+  const router = useRouter()
+  const [authChecked, setAuthChecked] = useState(false)
+  const [authData, setAuthData] = useState<AuthData | null>(null)
+  const [products, setProducts] = useState<Product[]>([]) // Инициализируем пустым массивом
   const sellerId = params?.id ?? '1'
 
-  // Тестовые данные поставщика
+  // Проверка авторизации при загрузке
+  useEffect(() => {
+    checkAuth()
+  }, [])
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/v1/auth', {
+        method: 'GET',
+        credentials: 'include',
+      })
+      
+      const data = await response.json()
+      
+      if (!data.authenticated) {
+        // Если не авторизован - на страницу регистрации
+        router.push('/register')
+      } else {
+        // Если авторизован - показываем страницу и загружаем товары
+        setAuthData(data)
+        setAuthChecked(true)
+        
+        // Тестовые товары (6+) - инициализируем после проверки авторизации
+        const initialProducts: Product[] = [
+          {
+            id: '1',
+            name: 'Гипсокартон ГКЛ 12.5мм',
+            price: 350,
+            image: 'https://via.placeholder.com/200/E8E8E8/666?text=Гипсокартон',
+            category: 'Строительные материалы',
+            status: 'in-stock',
+            quantity: 500,
+          },
+          {
+            id: '2',
+            name: 'Краска акриловая 10л',
+            price: 850,
+            image: 'https://via.placeholder.com/200/FF6B6B/FFF?text=Краска',
+            category: 'ЛКМ',
+            status: 'in-stock',
+            quantity: 120,
+          },
+          {
+            id: '3',
+            name: 'Цемент М400 50кг',
+            price: 450,
+            image: 'https://via.placeholder.com/200/B89968/FFF?text=Цемент',
+            category: 'Строительные материалы',
+            status: 'low-stock',
+            quantity: 45,
+          },
+          {
+            id: '4',
+            name: 'Арматура стальная Ø12мм',
+            price: 65,
+            image: 'https://via.placeholder.com/200/555/FFF?text=Арматура',
+            category: 'Металл',
+            status: 'out-of-stock',
+            quantity: 0,
+          },
+          {
+            id: '5',
+            name: 'Утеплитель минвата 50мм',
+            price: 280,
+            image: 'https://via.placeholder.com/200/FFD700/333?text=Утеплитель',
+            category: 'Изоляция',
+            status: 'in-stock',
+            quantity: 300,
+          },
+          {
+            id: '6',
+            name: 'Профильная труба 40x40x2мм',
+            price: 120,
+            image: 'https://via.placeholder.com/200/808080/FFF?text=Труба',
+            category: 'Металл',
+            status: 'in-stock',
+            quantity: 250,
+          },
+          {
+            id: '7',
+            name: 'Клей для плитки 25кг',
+            price: 890,
+            image: 'https://via.placeholder.com/200/E8E0C0/333?text=Клей',
+            category: 'Отделочные материалы',
+            status: 'in-stock',
+            quantity: 80,
+          },
+        ]
+        
+        setProducts(initialProducts)
+        
+        console.log('Авторизован как:', data.sellerEmail || data.userEmail)
+      }
+    } catch (error) {
+      console.error('Ошибка проверки авторизации:', error)
+      router.push('/register')
+    }
+  }
+
+  // Показываем загрузку пока проверяем авторизацию
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Проверка авторизации...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Тестовые данные поставщика (можно заменить на данные из authData)
   const sellerInfo = {
     name: 'ООО "Оптовая база"',
     role: 'Поставщик',
-    email: 'info@optbase.ru',
+    email: authData?.sellerEmail || 'info@optbase.ru',
     phone: '+7 (495) 123-45-67',
     avatar: 'https://via.placeholder.com/120/4F46E5/FFFFFF?text=ОБ',
     documents: [
@@ -42,75 +165,6 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
       { id: 4, name: 'Лицензия', verified: true },
     ] as Document[],
   }
-
-  // Тестовые товары (6+)
-  const initialProducts: Product[] = [
-    {
-      id: '1',
-      name: 'Гипсокартон ГКЛ 12.5мм',
-      price: 350,
-      image: 'https://via.placeholder.com/200/E8E8E8/666?text=Гипсокартон',
-      category: 'Строительные материалы',
-      status: 'in-stock',
-      quantity: 500,
-    },
-    {
-      id: '2',
-      name: 'Краска акриловая 10л',
-      price: 850,
-      image: 'https://via.placeholder.com/200/FF6B6B/FFF?text=Краска',
-      category: 'ЛКМ',
-      status: 'in-stock',
-      quantity: 120,
-    },
-    {
-      id: '3',
-      name: 'Цемент М400 50кг',
-      price: 450,
-      image: 'https://via.placeholder.com/200/B89968/FFF?text=Цемент',
-      category: 'Строительные материалы',
-      status: 'low-stock',
-      quantity: 45,
-    },
-    {
-      id: '4',
-      name: 'Арматура стальная Ø12мм',
-      price: 65,
-      image: 'https://via.placeholder.com/200/555/FFF?text=Арматура',
-      category: 'Металл',
-      status: 'out-of-stock',
-      quantity: 0,
-    },
-    {
-      id: '5',
-      name: 'Утеплитель минвата 50мм',
-      price: 280,
-      image: 'https://via.placeholder.com/200/FFD700/333?text=Утеплитель',
-      category: 'Изоляция',
-      status: 'in-stock',
-      quantity: 300,
-    },
-    {
-      id: '6',
-      name: 'Профильная труба 40x40x2мм',
-      price: 120,
-      image: 'https://via.placeholder.com/200/808080/FFF?text=Труба',
-      category: 'Металл',
-      status: 'in-stock',
-      quantity: 250,
-    },
-    {
-      id: '7',
-      name: 'Клей для плитки 25кг',
-      price: 890,
-      image: 'https://via.placeholder.com/200/E8E0C0/333?text=Клей',
-      category: 'Отделочные материалы',
-      status: 'in-stock',
-      quantity: 80,
-    },
-  ]
-
-  const [products, setProducts] = React.useState<Product[]>(initialProducts)
 
   function deleteProduct(id: string) {
     if (typeof window !== 'undefined') {
@@ -147,6 +201,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                   </div>
                   <h2 className="text-lg font-semibold text-center">{sellerInfo.name}</h2>
                   <p className="text-sm text-gray-600 text-center">{sellerInfo.role}</p>
+                  <p className="text-xs text-gray-500 mt-2 text-center">{authData?.sellerEmail || authData?.userEmail}</p>
                 </div>
 
                 {/* Контактные данные */}

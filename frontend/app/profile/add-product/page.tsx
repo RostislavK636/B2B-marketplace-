@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -17,14 +17,23 @@ type PriceRange = {
   price: number | ''
 }
 
+type AuthData = {
+  authenticated: boolean
+  sellerEmail?: string
+  userEmail?: string
+  sellerId?: string
+}
+
 export default function AddProductPage({ params }: { params?: { id?: string } }) {
   const router = useRouter()
+  const [authChecked, setAuthChecked] = useState(false)
+  const [authData, setAuthData] = useState<AuthData | null>(null)
 
-  const [name, setName] = React.useState('')
-  const [availability, setAvailability] = React.useState<number | ''>('')
-  const [description, setDescription] = React.useState('')
-  const [detailedDescription, setDetailedDescription] = React.useState('')
-  const [specs, setSpecs] = React.useState({
+  const [name, setName] = useState('')
+  const [availability, setAvailability] = useState<number | ''>('')
+  const [description, setDescription] = useState('')
+  const [detailedDescription, setDetailedDescription] = useState('')
+  const [specs, setSpecs] = useState({
     size: '',
     weight: '',
     minOrder: '',
@@ -32,10 +41,51 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
     color: '',
     loadCapacity: '',
   })
-  const [ranges, setRanges] = React.useState<PriceRange[]>([
+  const [ranges, setRanges] = useState<PriceRange[]>([
     { id: generateId(), min: '', max: '', price: '' },
   ])
-  const [errors, setErrors] = React.useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Проверка авторизации при загрузке
+  useEffect(() => {
+    checkAuth()
+  }, [])
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/v1/auth', {
+        method: 'GET',
+        credentials: 'include',
+      })
+      
+      const data = await response.json()
+      
+      if (!data.authenticated) {
+        // Если не авторизован - на страницу регистрации
+        router.push('/register')
+      } else {
+        // Если авторизован - показываем страницу
+        setAuthData(data)
+        setAuthChecked(true)
+        console.log('Авторизован как:', data.sellerEmail || data.userEmail)
+      }
+    } catch (error) {
+      console.error('Ошибка проверки авторизации:', error)
+      router.push('/register')
+    }
+  }
+
+  // Показываем загрузку пока проверяем авторизацию
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Проверка авторизации...</p>
+        </div>
+      </div>
+    )
+  }
 
   function generateId() {
     return String(Date.now()) + '-' + Math.floor(Math.random() * 10000)
@@ -106,26 +156,30 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
         max: r.max === '' || r.max === null ? null : Number(r.max),
         price: Number(r.price),
       })),
-      sellerId: params?.id ?? null,
+      sellerId: params?.id ?? authData?.sellerId ?? null,
     }
-
 
     console.log('Create product payload', payload)
     try {
       localStorage.setItem('lastProductPayload', JSON.stringify(payload))
     } catch (err) {
-
+      // Игнорируем ошибки localStorage
     }
     alert('Данные валидны. Payload сохранён в localStorage и выведен в консоль.')
-    router.push(`/seller/${params?.id ?? ''}`)
+    router.push(`/seller/${params?.id ?? authData?.sellerId ?? ''}`)
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
       <main className="flex-1 py-8">
         <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-2xl font-bold mb-6">Добавить товар</h1>
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">Добавить товар</h1>
+            <p className="text-gray-600 text-sm mt-1">
+              Вы авторизованы как: {authData?.sellerEmail || authData?.userEmail}
+            </p>
+          </div>
 
           <form onSubmit={onSubmit} className="space-y-6">
             <Card className="shadow-sm">
