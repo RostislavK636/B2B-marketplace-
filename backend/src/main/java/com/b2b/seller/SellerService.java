@@ -3,6 +3,7 @@ package com.b2b.seller;
 import com.b2b.registration.RegistrationRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +24,7 @@ public class SellerService {
                 .password(registrationRequest.getPassword())
                 .company(registrationRequest.getCompany())
                 .taxpayerId(registrationRequest.getTaxpayerId())
+                .products(new ArrayList<>())
                 .build();
 
         return sellerRepository.save(seller);
@@ -35,5 +37,9 @@ public class SellerService {
     public Seller getSellerById(Long sellerId) {
         return sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new IllegalStateException("seller not found"));
+    }
+
+    public void deleteAllSellers() {
+        sellerRepository.deleteAll();
     }
 }

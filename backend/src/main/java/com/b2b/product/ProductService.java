@@ -1,7 +1,10 @@
 package com.b2b.product;
 
 import com.b2b.seller.SellerService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -28,5 +31,16 @@ public class ProductService {
                 .build();
 
         productRepository.save(product);
+    }
+
+
+
+    @Transactional
+    public List<Product> getAllProducts(Long sellerId) {
+        return productRepository.findBySellerId(sellerId);
+    }
+
+    public void deleteAllProducts() {
+        productRepository.deleteAll();
     }
 }

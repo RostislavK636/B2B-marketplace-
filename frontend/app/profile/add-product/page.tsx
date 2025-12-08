@@ -139,68 +139,70 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
   }
 
   async function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!validate()) {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-      return
-    }
+  e.preventDefault()
+  if (!validate()) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    return
+  }
 
-    // Формируем данные для отправки на бэкенд
-    const payload = {
-      name: name.trim(),
-      availability: Number(availability),
-      description: description.trim(),
-      detailedDescription: detailedDescription.trim(),
-      productDetails: {
-        size: specs.size,
-        weight: specs.weight,
-        minimumOrderStartsFrom: Number(specs.minOrder) || 1, // Используем правильное имя поля из Java сущности
-        material: specs.material,
-        color: specs.color,
-        loadCapacity: specs.loadCapacity
+  // Формируем данные для отправки на бэкенд
+  const payload = {
+    name: name.trim(),
+    availability: Number(availability),
+    description: description.trim(),
+    detailedDescription: detailedDescription.trim(),
+    productDetails: {
+      size: specs.size,
+      weight: specs.weight,
+      minimumOrderStartsFrom: Number(specs.minOrder) || 1,
+      material: specs.material,
+      color: specs.color,
+      loadCapacity: specs.loadCapacity
+    },
+    productPriceRanges: ranges.map((r) => ({
+      initialQuantity: Number(r.min), // ← ИСПРАВЛЕНО: "min" → "initialQuantity"
+      finalQuantity: r.max === '' || r.max === null ? null : Number(r.max), // ← "max" → "finalQuantity"
+      pricePerRange: Number(r.price), // ← ИСПРАВЛЕНО: "price" → "pricePerRange"
+    })),
+    // sellerId не отправляем - он будет взят из куки на сервере
+  }
+
+  console.log('Create product payload', JSON.stringify(payload, null, 2))
+  
+  try {
+    // Отправляем POST запрос на сервер
+    const response = await fetch('/api/v1/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      productPriceRanges: ranges.map((r) => ({
-        min: Number(r.min), // Предполагаю что в Java классе ProductPriceRange поле называется min
-        max: r.max === '' || r.max === null ? null : Number(r.max), // max может быть null
-        price: Number(r.price),
-      })),
-      // sellerId не отправляем - он будет взят из куки на сервере
-    }
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    })
 
-    console.log('Create product payload', payload)
+    console.log('Response status:', response.status)
     
+    if (response.ok) {
+      // Успешный ответ
+      window.location.href = '/profile'
+    } else {
+      // Ошибка от сервера
+      const errorText = await response.text()
+      console.error('Error response:', errorText)
+      alert(`Ошибка ${response.status}: Не удалось добавить товар`)
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке запроса:', error)
+    alert('Произошла ошибка при отправке данных. Проверьте консоль для подробностей.')
+    
+    // На всякий случай сохраняем в localStorage для отладки
     try {
-      // Отправляем POST запрос на сервер
-      const response = await fetch('/api/v1/products', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Важно для передачи кук
-        body: JSON.stringify(payload),
-      })
-
-      if (response.ok) {
-        // Успешный ответ
-        router.push(`/profile`)
-      } else {
-        // Ошибка от сервера
-        const errorData = await response.json()
-        alert(`Ошибка: ${errorData.message || 'Не удалось добавить товар'}`)
-        console.error('Ошибка сервера:', errorData)
-      }
-    } catch (error) {
-      console.error('Ошибка при отправке запроса:', error)
-      alert('Произошла ошибка при отправке данных. Проверьте консоль для подробностей.')
-      
-      // На всякий случай сохраняем в localStorage для отладки
-      try {
-        localStorage.setItem('lastProductPayload', JSON.stringify(payload))
-      } catch (err) {
-        // Игнорируем ошибки localStorage
-      }
+      localStorage.setItem('lastProductPayload', JSON.stringify(payload))
+    } catch (err) {
+      // Игнорируем ошибки localStorage
     }
   }
+}
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

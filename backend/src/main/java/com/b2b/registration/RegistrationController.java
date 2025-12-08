@@ -27,6 +27,7 @@ public class RegistrationController {
 
         HttpSession session = httpServletRequest.getSession(true);
         session.setAttribute("sellerId", registered.getId());
+        session.setAttribute("sellerEmail", registered.getEmail());
         session.setMaxInactiveInterval(60 * 60);
 
         return ResponseEntity.ok(Map.of(

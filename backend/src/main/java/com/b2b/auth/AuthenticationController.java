@@ -1,5 +1,7 @@
 package com.b2b.auth;
 
+import com.b2b.seller.Seller;
+import com.b2b.seller.SellerService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthenticationController {
+
+    private final SellerService sellerService;
+
+    public AuthenticationController(SellerService sellerService) {
+        this.sellerService = sellerService;
+    }
 
     @GetMapping
     public ResponseEntity<?> auth(HttpServletRequest httpServletRequest) {
@@ -26,9 +34,12 @@ public class AuthenticationController {
 
         Long sellerId = (Long) session.getAttribute("sellerId");
 
+        Seller seller = sellerService.getSellerById(sellerId);
+
         return ResponseEntity.ok(Map.of(
                 "authenticated", true,
-                "userId", sellerId,
+                "sellerId", sellerId,
+                "sellerEmail", seller.getEmail(),
                 "message", "authenticated"
         ));
     }

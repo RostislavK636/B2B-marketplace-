@@ -10,6 +10,32 @@ import { useRouter } from 'next/navigation'
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
+// Тип для товара с бэкенда
+interface ProductFromBackend {
+  id: number
+  name: string
+  averageRating: number
+  numberOfReviews: number
+  availability: number
+  description: string
+  detailedDescription: string
+  productDetails: {
+    size: string
+    weight: string
+    material: string
+    color: string
+    loadCapacity: string
+    minimumOrderStartsFrom: number
+  }
+  productPriceRanges: Array<{
+    id: number
+    initialQuantity: number
+    finalQuantity: number | null
+    pricePerRange: number
+  }>
+}
+
+// Тип для отображения на фронтенде
 type Product = {
   id: string
   name: string
@@ -37,115 +63,105 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
   const router = useRouter()
   const [authChecked, setAuthChecked] = useState(false)
   const [authData, setAuthData] = useState<AuthData | null>(null)
-  const [products, setProducts] = useState<Product[]>([]) // Инициализируем пустым массивом
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const sellerId = params?.id ?? '1'
 
-  // Проверка авторизации при загрузке
+  // Проверка авторизации и загрузка товаров
   useEffect(() => {
-    checkAuth()
+    checkAuthAndLoadProducts()
   }, [])
 
-  const checkAuth = async () => {
+  const checkAuthAndLoadProducts = async () => {
     try {
-      const response = await fetch('/api/v1/auth', {
+      console.log('=== Загрузка SellerDashboard ===')
+      
+      // 1. Проверяем авторизацию
+      const authResponse = await fetch('/api/v1/auth', {
         method: 'GET',
         credentials: 'include',
       })
       
-      const data = await response.json()
+      const authData = await authResponse.json()
+      console.log('Auth данные:', authData)
       
-      if (!data.authenticated) {
-        // Если не авторизован - на страницу регистрации
+      if (!authData.authenticated) {
         router.push('/register')
-      } else {
-        // Если авторизован - показываем страницу и загружаем товары
-        setAuthData(data)
-        setAuthChecked(true)
-        
-        // Тестовые товары (6+) - инициализируем после проверки авторизации
-        const initialProducts: Product[] = [
-          {
-            id: '1',
-            name: 'Гипсокартон ГКЛ 12.5мм',
-            price: 350,
-            image: 'https://via.placeholder.com/200/E8E8E8/666?text=Гипсокартон',
-            category: 'Строительные материалы',
-            status: 'in-stock',
-            quantity: 500,
-          },
-          {
-            id: '2',
-            name: 'Краска акриловая 10л',
-            price: 850,
-            image: 'https://via.placeholder.com/200/FF6B6B/FFF?text=Краска',
-            category: 'ЛКМ',
-            status: 'in-stock',
-            quantity: 120,
-          },
-          {
-            id: '3',
-            name: 'Цемент М400 50кг',
-            price: 450,
-            image: 'https://via.placeholder.com/200/B89968/FFF?text=Цемент',
-            category: 'Строительные материалы',
-            status: 'low-stock',
-            quantity: 45,
-          },
-          {
-            id: '4',
-            name: 'Арматура стальная Ø12мм',
-            price: 65,
-            image: 'https://via.placeholder.com/200/555/FFF?text=Арматура',
-            category: 'Металл',
-            status: 'out-of-stock',
-            quantity: 0,
-          },
-          {
-            id: '5',
-            name: 'Утеплитель минвата 50мм',
-            price: 280,
-            image: 'https://via.placeholder.com/200/FFD700/333?text=Утеплитель',
-            category: 'Изоляция',
-            status: 'in-stock',
-            quantity: 300,
-          },
-          {
-            id: '6',
-            name: 'Профильная труба 40x40x2мм',
-            price: 120,
-            image: 'https://via.placeholder.com/200/808080/FFF?text=Труба',
-            category: 'Металл',
-            status: 'in-stock',
-            quantity: 250,
-          },
-          {
-            id: '7',
-            name: 'Клей для плитки 25кг',
-            price: 890,
-            image: 'https://via.placeholder.com/200/E8E0C0/333?text=Клей',
-            category: 'Отделочные материалы',
-            status: 'in-stock',
-            quantity: 80,
-          },
-        ]
-        
-        setProducts(initialProducts)
-        
-        console.log('Авторизован как:', data.sellerEmail || data.userEmail)
+        return
       }
+      
+      setAuthData(authData)
+      setAuthChecked(true)
+      
+      // 2. Загружаем товары продавца
+      const productsResponse = await fetch('/api/v1/products', {
+        method: 'GET',
+        credentials: 'include',
+      })
+      
+      console.log('Статус товаров:', productsResponse.status)
+      
+      if (productsResponse.ok) {
+        const backendProducts: ProductFromBackend[] = await productsResponse.json()
+        console.log('Получено товаров с сервера:', backendProducts.length)
+        
+        // Преобразуем товары из формата бэкенда в формат фронтенда
+        const transformedProducts = backendProducts.map(product => {
+          // Определяем статус на основе количества
+          let status: 'in-stock' | 'low-stock' | 'out-of-stock'
+          if (product.availability <= 0) {
+            status = 'out-of-stock'
+          } else if (product.availability < 50) {
+            status = 'low-stock'
+          } else {
+            status = 'in-stock'
+          }
+          
+          // Берем минимальную цену из первого диапазона
+          const basePrice = product.productPriceRanges?.length > 0 
+            ? product.productPriceRanges[0].pricePerRange 
+            : 0
+          
+          // Определяем категорию по материалу
+          const category = mapMaterialToCategory(product.productDetails?.material || "Другое")
+          
+          // Генерируем изображение на основе названия
+          const image = getProductImage(product.name, product.productDetails?.material)
+          
+          return {
+            id: product.id.toString(),
+            name: product.name,
+            price: basePrice,
+            image: image,
+            category: category,
+            status: status,
+            quantity: product.availability,
+            originalProduct: product // сохраняем оригинальный объект
+          }
+        })
+        
+        console.log('Преобразовано товаров:', transformedProducts.length)
+        setProducts(transformedProducts)
+        
+      } else {
+        console.error('Ошибка загрузки товаров:', await productsResponse.text())
+      }
+      
     } catch (error) {
-      console.error('Ошибка проверки авторизации:', error)
+      console.error('Ошибка при загрузке:', error)
       router.push('/register')
+    } finally {
+      setLoading(false)
     }
   }
 
   // Показываем загрузку пока проверяем авторизацию
-  if (!authChecked) {
+  if (!authChecked || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Проверка авторизации...</p>
+          <p className="text-gray-600">Загрузка товаров...</p>
         </div>
       </div>
     )
@@ -166,10 +182,23 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
     ] as Document[],
   }
 
-  function deleteProduct(id: string) {
+  async function deleteProduct(id: string) {
     if (typeof window !== 'undefined') {
       if (window.confirm('Вы уверены, что хотите удалить этот товар?')) {
-        setProducts((prev) => prev.filter((p) => p.id !== id))
+        try {
+          // TODO: Реализовать удаление на бэкенде
+          // await fetch(`/api/v1/products/${id}`, {
+          //   method: 'DELETE',
+          //   credentials: 'include'
+          // })
+          
+          // Пока просто удаляем из состояния
+          setProducts((prev) => prev.filter((p) => p.id !== id))
+          alert('Товар удален (пока только на фронтенде)')
+        } catch (error) {
+          console.error('Ошибка удаления:', error)
+          alert('Ошибка при удалении товара')
+        }
       }
     }
   }
@@ -202,6 +231,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                   <h2 className="text-lg font-semibold text-center">{sellerInfo.name}</h2>
                   <p className="text-sm text-gray-600 text-center">{sellerInfo.role}</p>
                   <p className="text-xs text-gray-500 mt-2 text-center">{authData?.sellerEmail || authData?.userEmail}</p>
+                  <p className="text-xs text-gray-500">ID: {authData?.sellerId || 'неизвестен'}</p>
                 </div>
 
                 {/* Контактные данные */}
@@ -247,23 +277,47 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                   {products.length}
                 </Badge>
               </div>
-              <Link href={`profile/add-product`}>
-                <Button className="gap-2">
-                  <Plus className="w-4 h-4" />
-                  Добавить товар
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={checkAuthAndLoadProducts}
+                  disabled={loading}
+                >
+                  Обновить
                 </Button>
-              </Link>
+                <Link href={`/profile/add-product`}>
+                  <Button className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    Добавить товар
+                  </Button>
+                </Link>
+              </div>
             </div>
+
+            {/* Информация о загрузке */}
+            {loading && (
+              <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-600">Загрузка товаров...</p>
+              </div>
+            )}
 
             {/* СЕТКА ТОВАРОВ */}
             {products.length === 0 ? (
               <Card className="shadow-sm">
                 <CardContent className="p-12 text-center">
                   <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 mb-4">У вас пока нет товаров</p>
-                  <Link href={`/seller/${sellerId}/add-product`}>
+                  <p className="text-gray-500 mb-2">У вас пока нет товаров</p>
+                  <p className="text-sm text-gray-400 mb-4">Добавьте первый товар в каталог</p>
+                  <Link href={`/profile/add-product`}>
                     <Button>Добавить первый товар</Button>
                   </Link>
+                  <Button 
+                    variant="outline" 
+                    className="mt-2"
+                    onClick={checkAuthAndLoadProducts}
+                  >
+                    Проверить снова
+                  </Button>
                 </CardContent>
               </Card>
             ) : (
@@ -274,7 +328,14 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                     <Card key={product.id} className="shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
                       {/* Изображение товара */}
                       <div className="relative w-full h-40 bg-gray-100 overflow-hidden">
-                        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                        <img 
+                          src={product.image} 
+                          alt={product.name} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder.svg'
+                          }}
+                        />
                         <div className="absolute top-2 right-2">
                           <Badge className={statusInfo.color}>{statusInfo.label}</Badge>
                         </div>
@@ -291,6 +352,12 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                         <div className="mb-4">
                           <p className="text-2xl font-bold text-indigo-600">{product.price}₽</p>
                           <p className="text-sm text-gray-500">В наличии: {product.quantity} шт</p>
+                          {product.status === 'low-stock' && (
+                            <p className="text-xs text-yellow-600 mt-1">⚠️ Заканчивается</p>
+                          )}
+                          {product.status === 'out-of-stock' && (
+                            <p className="text-xs text-red-600 mt-1">⛔ Нет в наличии</p>
+                          )}
                         </div>
 
                         {/* Кнопка удалить */}
@@ -309,10 +376,75 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                 })}
               </div>
             )}
+            
+            {/* Информация о товарах */}
+            {products.length > 0 && (
+              <div className="mt-6 p-4 bg-gray-100 rounded-lg">
+                <p className="text-sm text-gray-600">
+                  Показано товаров: <span className="font-bold">{products.length}</span>
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Товары загружены с сервера. Статус определяется автоматически по количеству.
+                </p>
+              </div>
+            )}
           </section>
         </div>
       </main>
       <Footer />
     </div>
   )
+}
+
+// Вспомогательные функции
+function getProductImage(productName: string, material?: string): string {
+  const lowerName = productName.toLowerCase()
+  const lowerMaterial = material?.toLowerCase() || ""
+  
+  if (lowerName.includes("короб") || lowerMaterial.includes("картон")) {
+    return "https://via.placeholder.com/200/E8E8E8/666?text=Коробка"
+  } else if (lowerName.includes("пленк") || lowerMaterial.includes("полиэтилен")) {
+    if (lowerName.includes("пузырчат")) {
+      return "https://via.placeholder.com/200/87CEEB/FFF?text=Пленка"
+    }
+    return "https://via.placeholder.com/200/ADD8E6/333?text=Пленка"
+  } else if (lowerName.includes("скотч") || lowerMaterial.includes("полипропилен")) {
+    return "https://via.placeholder.com/200/FFE4B5/333?text=Скотч"
+  } else if (lowerName.includes("краск") || lowerName.includes("красок")) {
+    return "https://via.placeholder.com/200/FF6B6B/FFF?text=Краска"
+  } else if (lowerName.includes("цемент") || lowerName.includes("бетон")) {
+    return "https://via.placeholder.com/200/B89968/FFF?text=Цемент"
+  } else if (lowerName.includes("арматур") || lowerName.includes("металл")) {
+    return "https://via.placeholder.com/200/555/FFF?text=Металл"
+  } else if (lowerName.includes("утеплитель") || lowerName.includes("изоляция")) {
+    return "https://via.placeholder.com/200/FFD700/333?text=Утеплитель"
+  } else if (lowerName.includes("труб") || lowerName.includes("профиль")) {
+    return "https://via.placeholder.com/200/808080/FFF?text=Труба"
+  } else if (lowerName.includes("клей") || lowerName.includes("клея")) {
+    return "https://via.placeholder.com/200/E8E0C0/333?text=Клей"
+  }
+  
+  return "https://via.placeholder.com/200/4F46E5/FFF?text=Товар"
+}
+
+function mapMaterialToCategory(material: string): string {
+  const lowerMaterial = material.toLowerCase()
+  
+  if (lowerMaterial.includes("картон")) {
+    return "Коробки"
+  } else if (lowerMaterial.includes("полиэтилен")) {
+    return "Пленка"
+  } else if (lowerMaterial.includes("полипропилен")) {
+    return "Скотч"
+  } else if (lowerMaterial.includes("краск") || lowerMaterial.includes("лак")) {
+    return "ЛКМ"
+  } else if (lowerMaterial.includes("металл") || lowerMaterial.includes("сталь")) {
+    return "Металл"
+  } else if (lowerMaterial.includes("цемент") || lowerMaterial.includes("бетон")) {
+    return "Строительные материалы"
+  } else if (lowerMaterial.includes("утеплитель") || lowerMaterial.includes("изоляция")) {
+    return "Изоляция"
+  }
+  
+  return "Другое"
 }
