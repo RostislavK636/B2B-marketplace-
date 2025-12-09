@@ -35,6 +35,17 @@ interface ProductFromBackend {
   }>
 }
 
+// Тип для продавца с бэкенда
+interface SellerFromBackend {
+  id: number
+  name: string
+  surname: string
+  email: string
+  phoneNumber: string
+  company: string
+  taxpayerId: string
+}
+
 // Тип для отображения на фронтенде
 type Product = {
   id: string
@@ -59,24 +70,24 @@ type AuthData = {
   sellerId?: string
 }
 
-export default function SellerDashboard({ params }: { params?: { id?: string } }) {
+export default function SellerDashboard() {
   const router = useRouter()
   const [authChecked, setAuthChecked] = useState(false)
   const [authData, setAuthData] = useState<AuthData | null>(null)
+  const [sellerInfo, setSellerInfo] = useState<SellerFromBackend | null>(null)
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const sellerId = params?.id ?? '1'
 
-  // Проверка авторизации и загрузка товаров
+  // Проверка авторизации и загрузка данных
   useEffect(() => {
-    checkAuthAndLoadProducts()
+    checkAuthAndLoadData()
   }, [])
 
-  const checkAuthAndLoadProducts = async () => {
+  const checkAuthAndLoadData = async () => {
     try {
       console.log('=== Загрузка SellerDashboard ===')
       
-      // 1. Проверяем авторизацию
+      // 1. Проверяем авторизацию (sellerId берется из сессии на бэкенде)
       const authResponse = await fetch('/api/v1/auth', {
         method: 'GET',
         credentials: 'include',
@@ -93,7 +104,59 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
       setAuthData(authData)
       setAuthChecked(true)
       
-      // 2. Загружаем товары продавца
+      // 2. Загружаем информацию о текущем продавце из БД
+      await loadSellerInfo()
+      
+      // 3. Загружаем товары текущего продавца из БД
+      await loadSellerProducts()
+      
+    } catch (error) {
+      console.error('Ошибка при загрузке:', error)
+      router.push('/register')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadSellerInfo = async () => {
+    try {
+      console.log('Загрузка информации о текущем продавце из БД...')
+      
+      // Эндпоинт для получения текущего продавца (sellerId берется из сессии)
+      const sellerResponse = await fetch('/api/v1/sellers/current', {
+        method: 'GET',
+        credentials: 'include',
+      })
+      
+      console.log('Статус seller info:', sellerResponse.status)
+      
+      if (sellerResponse.ok) {
+        const sellerData = await sellerResponse.json()
+        console.log('Данные продавца из БД:', sellerData)
+        setSellerInfo(sellerData)
+      } else {
+        console.warn('Не удалось загрузить данные продавца из БД, статус:', sellerResponse.status)
+        // Используем данные из auth как запасной вариант
+        if (authData?.sellerEmail) {
+          setSellerInfo({
+            id: parseInt(authData.sellerId || '0'),
+            name: 'Имя',
+            surname: '',
+            email: authData.sellerEmail,
+            phoneNumber: 'Не указан',
+            company: 'Компания',
+            taxpayerId: 'Не указан'
+          })
+        }
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки информации о продавце:', error)
+    }
+  }
+
+  const loadSellerProducts = async () => {
+    try {
+      console.log('Загрузка товаров текущего продавца из БД...')
       const productsResponse = await fetch('/api/v1/products', {
         method: 'GET',
         credentials: 'include',
@@ -136,7 +199,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
             category: category,
             status: status,
             quantity: product.availability,
-            originalProduct: product // сохраняем оригинальный объект
+            originalProduct: product
           }
         })
         
@@ -146,12 +209,8 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
       } else {
         console.error('Ошибка загрузки товаров:', await productsResponse.text())
       }
-      
     } catch (error) {
-      console.error('Ошибка при загрузке:', error)
-      router.push('/register')
-    } finally {
-      setLoading(false)
+      console.error('Ошибка загрузки товаров:', error)
     }
   }
 
@@ -161,26 +220,47 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Загрузка товаров...</p>
+          <p className="text-gray-600">Загрузка профиля...</p>
         </div>
       </div>
     )
   }
 
-  // Тестовые данные поставщика (можно заменить на данные из authData)
-  const sellerInfo = {
-    name: 'ООО "Оптовая база"',
-    role: 'Поставщик',
-    email: authData?.sellerEmail || 'info@optbase.ru',
-    phone: '+7 (495) 123-45-67',
-    avatar: 'https://via.placeholder.com/120/4F46E5/FFFFFF?text=ОБ',
-    documents: [
-      { id: 1, name: 'ИНН', verified: true },
-      { id: 2, name: 'Устав организации', verified: true },
-      { id: 3, name: 'Свидетельство о регистрации', verified: false },
-      { id: 4, name: 'Лицензия', verified: true },
-    ] as unknown as Document[],
+  // Используем реальные данные продавца из БД
+  const displaySellerInfo = {
+    name: sellerInfo 
+      ? `${sellerInfo.name}${sellerInfo.surname ? ' ' + sellerInfo.surname : ''}` 
+      : 'Не указано',
+    company: sellerInfo?.company || 'Компания не указана',
+    email: sellerInfo?.email || authData?.sellerEmail || 'Не указан',
+    phone: sellerInfo?.phoneNumber || 'Не указан',
+    taxpayerId: sellerInfo?.taxpayerId || 'Не указан',
+    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(sellerInfo?.name || 'П')}&background=4F46E5&color=fff&size=120`,
   }
+
+  // Документы на основе реальных данных
+  const documents: Document[] = [
+    { 
+      id: 1, 
+      name: 'ИНН', 
+      verified: !!sellerInfo?.taxpayerId && sellerInfo.taxpayerId !== 'Не указан' 
+    },
+    { 
+      id: 2, 
+      name: 'Реквизиты компании', 
+      verified: !!sellerInfo?.company && sellerInfo.company !== 'Компания не указана' 
+    },
+    { 
+      id: 3, 
+      name: 'Контактные данные', 
+      verified: !!sellerInfo?.phoneNumber && sellerInfo.phoneNumber !== 'Не указан' 
+    },
+    { 
+      id: 4, 
+      name: 'Email подтвержден', 
+      verified: !!sellerInfo?.email 
+    },
+  ]
 
   async function deleteProduct(id: string) {
     if (typeof window !== 'undefined') {
@@ -219,45 +299,69 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
       <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* ЛЕВЫЙ БЛОК - ИНФОРМАЦИЯ О ПОСТАВЩИКЕ */}
+          {/* ЛЕВЫЙ БЛОК - РЕАЛЬНАЯ ИНФОРМАЦИЯ О ПОСТАВЩИКЕ ИЗ БД */}
           <aside className="lg:col-span-1">
             <Card className="sticky top-8 shadow-sm">
               <CardContent className="p-6 space-y-6">
                 {/* Аватар */}
                 <div className="flex flex-col items-center">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold mb-4">
-                    {sellerInfo.avatar ? <img src={sellerInfo.avatar} alt="Avatar" className="w-full h-full rounded-full object-cover" /> : 'ОБ'}
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold mb-4 overflow-hidden">
+                    <img 
+                      src={displaySellerInfo.avatar} 
+                      alt="Avatar" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = `https://ui-avatars.com/api/?name=П&background=4F46E5&color=fff&size=120`
+                      }}
+                    />
                   </div>
-                  <h2 className="text-lg font-semibold text-center">{sellerInfo.name}</h2>
-                  <p className="text-sm text-gray-600 text-center">{sellerInfo.role}</p>
-                  <p className="text-xs text-gray-500 mt-2 text-center">{authData?.sellerEmail || authData?.userEmail}</p>
-                  <p className="text-xs text-gray-500">ID: {authData?.sellerId || 'неизвестен'}</p>
+                  <h2 className="text-lg font-semibold text-center">{displaySellerInfo.name}</h2>
+                  <p className="text-sm text-gray-600 text-center">Поставщик</p>
+                  <p className="text-sm font-medium text-center mt-2">{displaySellerInfo.company}</p>
+                  <p className="text-xs text-gray-500 mt-2 text-center">{displaySellerInfo.email}</p>
                 </div>
 
-                {/* Контактные данные */}
+                {/* Контактные данные из БД */}
                 <div className="border-t pt-4 space-y-3">
                   <div>
                     <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Email</p>
-                    <a href={`mailto:${sellerInfo.email}`} className="text-sm text-indigo-600 hover:underline break-all">
-                      {sellerInfo.email}
+                    <a 
+                      href={`mailto:${displaySellerInfo.email}`} 
+                      className="text-sm text-indigo-600 hover:underline break-all"
+                    >
+                      {displaySellerInfo.email}
                     </a>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Телефон</p>
-                    <a href={`tel:${sellerInfo.phone}`} className="text-sm text-indigo-600 hover:underline">
-                      {sellerInfo.phone}
+                    <a 
+                      href={`tel:${displaySellerInfo.phone}`} 
+                      className="text-sm text-indigo-600 hover:underline"
+                    >
+                      {displaySellerInfo.phone}
                     </a>
                   </div>
+                  {displaySellerInfo.taxpayerId !== 'Не указан' && (
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">ИНН</p>
+                      <p className="text-sm text-gray-700">{displaySellerInfo.taxpayerId}</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Документы */}
                 <div className="border-t pt-4">
-                  <h3 className="text-sm font-semibold mb-3">Документы</h3>
+                  <h3 className="text-sm font-semibold mb-3">Документы и проверки</h3>
                   <div className="space-y-2">
-                    {sellerInfo.documents.map((doc) => (
+                    {documents.map((doc) => (
                       <div key={doc.id} className="flex items-center justify-between text-sm">
                         <span className="text-gray-700">{doc.name}</span>
-                        <span className="text-lg">{doc.verified ? '✅' : '⏳'}</span>
+                        <span 
+                          className="text-lg" 
+                          title={doc.verified ? 'Проверено' : 'Ожидает проверки'}
+                        >
+                          {doc.verified ? '✅' : '⏳'}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -266,7 +370,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
             </Card>
           </aside>
 
-          {/* ПРАВЫЙ БЛОК - ТОВАРЫ */}
+          {/* ПРАВЫЙ БЛОК - ТОВАРЫ ИЗ БД */}
           <section className="lg:col-span-3">
             {/* Заголовок и кнопка */}
             <div className="flex items-center justify-between mb-8">
@@ -280,7 +384,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
-                  onClick={checkAuthAndLoadProducts}
+                  onClick={checkAuthAndLoadData}
                   disabled={loading}
                 >
                   Обновить
@@ -297,7 +401,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
             {/* Информация о загрузке */}
             {loading && (
               <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-600">Загрузка товаров...</p>
+                <p className="text-sm text-blue-600">Загрузка данных...</p>
               </div>
             )}
 
@@ -314,79 +418,79 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                   <Button 
                     variant="outline" 
                     className="mt-2"
-                    onClick={checkAuthAndLoadProducts}
+                    onClick={checkAuthAndLoadData}
                   >
                     Проверить снова
                   </Button>
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map((product) => {
-                  const statusInfo = getStatusBadge(product.status)
-                  return (
-                    <Card key={product.id} className="shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
-                      {/* Изображение товара */}
-                      <div className="relative w-full h-40 bg-gray-100 overflow-hidden">
-                        <img 
-                          src={product.image} 
-                          alt={product.name} 
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = '/placeholder.svg'
-                          }}
-                        />
-                        <div className="absolute top-2 right-2">
-                          <Badge className={statusInfo.color}>{statusInfo.label}</Badge>
-                        </div>
-                      </div>
-
-                      <CardContent className="p-4 flex flex-col flex-grow">
-                        {/* Категория */}
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">{product.category}</p>
-
-                        {/* Название */}
-                        <h3 className="font-semibold text-base mb-2 line-clamp-2">{product.name}</h3>
-
-                        {/* Цена и количество */}
-                        <div className="mb-4">
-                          <p className="text-2xl font-bold text-indigo-600">{product.price}₽</p>
-                          <p className="text-sm text-gray-500">В наличии: {product.quantity} шт</p>
-                          {product.status === 'low-stock' && (
-                            <p className="text-xs text-yellow-600 mt-1">⚠️ Заканчивается</p>
-                          )}
-                          {product.status === 'out-of-stock' && (
-                            <p className="text-xs text-red-600 mt-1">⛔ Нет в наличии</p>
-                          )}
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {products.map((product) => {
+                    const statusInfo = getStatusBadge(product.status)
+                    return (
+                      <Card key={product.id} className="shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
+                        {/* Изображение товара */}
+                        <div className="relative w-full h-40 bg-gray-100 overflow-hidden">
+                          <img 
+                            src={product.image} 
+                            alt={product.name} 
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.src = '/placeholder.svg'
+                            }}
+                          />
+                          <div className="absolute top-2 right-2">
+                            <Badge className={statusInfo.color}>{statusInfo.label}</Badge>
+                          </div>
                         </div>
 
-                        {/* Кнопка удалить */}
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deleteProduct(product.id)}
-                          className="w-full gap-2 mt-auto text-primary-foreground"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          Удалить
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  )
-                })}
-              </div>
-            )}
-            
-            {/* Информация о товарах */}
-            {products.length > 0 && (
-              <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-                <p className="text-sm text-gray-600">
-                  Показано товаров: <span className="font-bold">{products.length}</span>
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Товары загружены с сервера. Статус определяется автоматически по количеству.
-                </p>
-              </div>
+                        <CardContent className="p-4 flex flex-col flex-grow">
+                          {/* Категория */}
+                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">{product.category}</p>
+
+                          {/* Название */}
+                          <h3 className="font-semibold text-base mb-2 line-clamp-2">{product.name}</h3>
+
+                          {/* Цена и количество */}
+                          <div className="mb-4">
+                            <p className="text-2xl font-bold text-indigo-600">{product.price}₽</p>
+                            <p className="text-sm text-gray-500">В наличии: {product.quantity} шт</p>
+                            {product.status === 'low-stock' && (
+                              <p className="text-xs text-yellow-600 mt-1">⚠️ Заканчивается</p>
+                            )}
+                            {product.status === 'out-of-stock' && (
+                              <p className="text-xs text-red-600 mt-1">⛔ Нет в наличии</p>
+                            )}
+                          </div>
+
+                          {/* Кнопка удалить */}
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteProduct(product.id)}
+                            className="w-full gap-2 mt-auto"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Удалить
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                </div>
+                
+                {/* Информация о товарах */}
+                <div className="mt-6 p-4 bg-gray-100 rounded-lg">
+                  <p className="text-sm text-gray-600">
+                    Показано товаров: <span className="font-bold">{products.length}</span>
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Товары загружены из базы данных. Статус определяется автоматически по количеству.
+                  </p>
+                </div>
+              </>
             )}
           </section>
         </div>
