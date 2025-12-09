@@ -211,9 +211,6 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Добавить товар</h1>
-            <p className="text-gray-600 text-sm mt-1">
-              Вы авторизованы как: {authData?.sellerEmail || authData?.userEmail}
-            </p>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-6">

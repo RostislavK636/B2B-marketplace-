@@ -411,17 +411,10 @@ export default function SellerDashboard() {
                 <CardContent className="p-12 text-center">
                   <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-500 mb-2">У вас пока нет товаров</p>
-                  <p className="text-sm text-gray-400 mb-4">Добавьте первый товар в каталог</p>
+                  <p className="text-sm text-gray-400 mb-4">Добавьте первый товар</p>
                   <Link href={`/profile/add-product`}>
-                    <Button>Добавить первый товар</Button>
+                    <Button>Добавить</Button>
                   </Link>
-                  <Button 
-                    variant="outline" 
-                    className="mt-2"
-                    onClick={checkAuthAndLoadData}
-                  >
-                    Проверить снова
-                  </Button>
                 </CardContent>
               </Card>
             ) : (

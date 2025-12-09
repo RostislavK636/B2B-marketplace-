@@ -72,7 +72,7 @@ export default function RegisterPage() {
 
           {!userType ? (
             <>
-              <p className="text-center text-muted-foreground mb-8">Выберите тип аккаунта для начала работы</p>
+              <p className="text-center text-muted-foreground mb-8">Выберите тип аккаунта</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Buyer Card */}
@@ -82,7 +82,7 @@ export default function RegisterPage() {
                       <span className="text-4xl">🛒</span>
                     </div>
                     <h2 className="text-2xl font-bold mb-3">Я покупатель</h2>
-                    <p className="text-muted-foreground mb-6">Ищу упаковку по выгодным ценам</p>
+                    <p className="text-muted-foreground mb-6">Ищу упаковку</p>
                     <ul className="text-left space-y-2 text-sm mb-6">
                       <li className="flex items-start gap-2">
                         <span className="text-primary">✓</span>
@@ -115,7 +115,7 @@ export default function RegisterPage() {
                       <span className="text-4xl">🏭</span>
                     </div>
                     <h2 className="text-2xl font-bold mb-3">Я продавец</h2>
-                    <p className="text-muted-foreground mb-6">Хочу продавать упаковку B2B клиентам</p>
+                    <p className="text-muted-foreground mb-6">Хочу продавать упаковку</p>
                     <ul className="text-left space-y-2 text-sm mb-6">
                       <li className="flex items-start gap-2">
                         <span className="text-accent">✓</span>
