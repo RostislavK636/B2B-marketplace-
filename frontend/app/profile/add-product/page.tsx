@@ -217,13 +217,13 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
             <Card className="shadow-sm">
               <CardContent className="p-6 space-y-4">
                 <div>
-                  <Label>Название товара *</Label>
+                  <Label className="mb-2">Название товара </Label>
                   <Input value={name} onChange={(e) => setName(e.target.value)} />
                   {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <Label>Количество в наличии (шт) *</Label>
+                  <Label className="mb-2">Количество в наличии (шт) </Label>
                   <Input
                     type="number"
                     value={availability}
@@ -234,13 +234,13 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
                 </div>
 
                 <div>
-                  <Label>Краткое описание *</Label>
+                  <Label className="mb-2">Краткое описание </Label>
                   <Textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                   {errors.description && <p className="text-red-600 text-sm mt-1">{errors.description}</p>}
                 </div>
 
                 <div>
-                  <Label>Подробное описание *</Label>
+                  <Label className="mb-2">Подробное описание </Label>
                   <Textarea value={detailedDescription} onChange={(e) => setDetailedDescription(e.target.value)} rows={6} />
                   {errors.detailedDescription && <p className="text-red-600 text-sm mt-1">{errors.detailedDescription}</p>}
                 </div>
@@ -249,7 +249,7 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
 
             <Card className="shadow-sm">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-lg mb-4">Оптовые диапазоны и цены *</h3>
+                <h3 className="font-semibold text-lg mb-4">Оптовые диапазоны и цены </h3>
 
                 {errors.ranges && <p className="text-red-600 text-sm mb-2">{errors.ranges}</p>}
 
@@ -257,7 +257,7 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
                   {ranges.map((r, idx) => (
                     <div key={r.id} className="grid grid-cols-12 gap-3 items-end">
                       <div className="col-span-3">
-                        <Label>От (шт)</Label>
+                        <Label className="mb-2">От (шт)</Label>
                         <Input
                           type="number"
                           value={r.min}
@@ -268,7 +268,7 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
                       </div>
 
                       <div className="col-span-3">
-                        <Label>До (шт)</Label>
+                        <Label className="mb-2">До (шт)</Label>
                         <Input
                           type="number"
                           value={r.max ?? ''}
@@ -283,7 +283,7 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
                       </div>
 
                       <div className="col-span-3">
-                        <Label>Цена за единицу (₽) *</Label>
+                        <Label className="mb-2">Цена за единицу (₽) </Label>
                         <Input
                           type="number"
                           value={r.price}
@@ -297,7 +297,7 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
                         <Button type="button" variant="outline" className="grow" onClick={() => addRange()}>
                           +
                         </Button>
-                        <Button type="button" variant="destructive" onClick={() => removeRange(r.id)} disabled={ranges.length === 1}>
+                        <Button type="button" onClick={() => removeRange(r.id)} disabled={ranges.length === 1}>
                           Удалить
                         </Button>
                       </div>
@@ -309,35 +309,35 @@ export default function AddProductPage({ params }: { params?: { id?: string } })
 
             <Card className="shadow-sm">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-lg mb-4">Характеристики *</h3>
+                <h3 className="font-semibold text-lg mb-4">Характеристики </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Размер</Label>
+                    <Label className="mb-2">Размер</Label>
                     <Input value={specs.size} onChange={(e) => setSpecs((s) => ({ ...s, size: e.target.value }))} />
                     {errors['specs.size'] && <p className="text-red-600 text-sm">{errors['specs.size']}</p>}
                   </div>
                   <div>
-                    <Label>Вес</Label>
+                    <Label className="mb-2">Вес</Label>
                     <Input value={specs.weight} onChange={(e) => setSpecs((s) => ({ ...s, weight: e.target.value }))} />
                     {errors['specs.weight'] && <p className="text-red-600 text-sm">{errors['specs.weight']}</p>}
                   </div>
                   <div>
-                    <Label>Минимальный заказ (шт)</Label>
+                    <Label className="mb-2">Минимальный заказ (шт)</Label>
                     <Input value={specs.minOrder} onChange={(e) => setSpecs((s) => ({ ...s, minOrder: e.target.value }))} />
                     {errors['specs.minOrder'] && <p className="text-red-600 text-sm">{errors['specs.minOrder']}</p>}
                   </div>
                   <div>
-                    <Label>Материал</Label>
+                    <Label className="mb-2">Материал</Label>
                     <Input value={specs.material} onChange={(e) => setSpecs((s) => ({ ...s, material: e.target.value }))} />
                     {errors['specs.material'] && <p className="text-red-600 text-sm">{errors['specs.material']}</p>}
                   </div>
                   <div>
-                    <Label>Цвет</Label>
+                    <Label className="mb-2">Цвет</Label>
                     <Input value={specs.color} onChange={(e) => setSpecs((s) => ({ ...s, color: e.target.value }))} />
                     {errors['specs.color'] && <p className="text-red-600 text-sm">{errors['specs.color']}</p>}
                   </div>
                   <div>
-                    <Label>Грузоподъемность</Label>
+                    <Label className="mb-2">Грузоподъемность</Label>
                     <Input value={specs.loadCapacity} onChange={(e) => setSpecs((s) => ({ ...s, loadCapacity: e.target.value }))} />
                     {errors['specs.loadCapacity'] && <p className="text-red-600 text-sm">{errors['specs.loadCapacity']}</p>}
                   </div>
