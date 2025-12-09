@@ -83,7 +83,7 @@ export default function RegisterPage() {
                     </div>
                     <h2 className="text-2xl font-bold mb-3">Я покупатель</h2>
                     <p className="text-muted-foreground mb-6">Ищу упаковку</p>
-                    <ul className="text-left space-y-2 text-sm mb-6">
+                    <ul className="space-y-2 text-sm mb-6 ml-14">
                       <li className="flex items-start gap-2">
                         <span className="text-primary">✓</span>
                         <span>Доступ к тысячам товаров</span>
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                     </div>
                     <h2 className="text-2xl font-bold mb-3">Я продавец</h2>
                     <p className="text-muted-foreground mb-6">Хочу продавать упаковку</p>
-                    <ul className="text-left space-y-2 text-sm mb-6">
+                    <ul className="text-left space-y-2 text-sm mb-6 ml-14">
                       <li className="flex items-start gap-2">
                         <span className="text-accent">✓</span>
                         <span>Тысячи потенциальных клиентов</span>
