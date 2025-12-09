@@ -152,7 +152,7 @@ export default function HomePage() {
                     <CardContent className="p-4">
                       <p className="text-sm text-muted-foreground mb-1">{product.category}</p>
                       <h3 className="font-semibold mb-2">{product.name}</h3>
-                      <p className="text-lg font-bold text-primary">{product.price}</p>
+                      <p className="text-lg font-bold ">{product.price}</p>
                     </CardContent>
                   </Link>
                 </Card>
@@ -194,8 +194,8 @@ export default function HomePage() {
         {/* Final CTA */}
         <section className="py-20 bg-gradient-to-r from-primary to-accent text-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Готовы начать?</h2>
-            <p className="text-xl mb-8 text-white/90">Зарегистрируйтесь и получите доступ к лучшим предложениям</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-secondary-foreground">Готовы начать?</h2>
+            <p className="text-xl mb-8 text-primary-foreground" >Зарегистрируйтесь и получите доступ к лучшим предложениям</p>
             <Button size="lg" variant="secondary" asChild>
               <Link href="/register">Зарегистрироваться бесплатно</Link>
             </Button>

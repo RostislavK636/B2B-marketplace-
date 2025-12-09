@@ -179,7 +179,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
       { id: 2, name: 'Устав организации', verified: true },
       { id: 3, name: 'Свидетельство о регистрации', verified: false },
       { id: 4, name: 'Лицензия', verified: true },
-    ] as Document[],
+    ] as unknown as Document[],
   }
 
   async function deleteProduct(id: string) {
@@ -365,7 +365,7 @@ export default function SellerDashboard({ params }: { params?: { id?: string } }
                           variant="destructive"
                           size="sm"
                           onClick={() => deleteProduct(product.id)}
-                          className="w-full gap-2 mt-auto"
+                          className="w-full gap-2 mt-auto text-primary-foreground"
                         >
                           <Trash2 className="w-4 h-4" />
                           Удалить

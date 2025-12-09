@@ -82,7 +82,7 @@ export default function RegisterPage() {
                       <span className="text-4xl">🛒</span>
                     </div>
                     <h2 className="text-2xl font-bold mb-3">Я покупатель</h2>
-                    <p className="text-muted-foreground mb-6">Ищу качественную упаковку по выгодным ценам</p>
+                    <p className="text-muted-foreground mb-6">Ищу упаковку по выгодным ценам</p>
                     <ul className="text-left space-y-2 text-sm mb-6">
                       <li className="flex items-start gap-2">
                         <span className="text-primary">✓</span>
@@ -134,7 +134,7 @@ export default function RegisterPage() {
                         <span>Быстрый вывод средств</span>
                       </li>
                     </ul>
-                    <Button className="w-full" variant="secondary">
+                    <Button className="w-full">
                       Зарегистрироваться
                     </Button>
                   </CardContent>

@@ -10,15 +10,15 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* Custom coral primary color for brand */
-   --primary:oklch(83.992% 0.14479 189.268) ;
-  --primary-foreground: oklch(1 0 0);
+  /* Custom coral primary color for brand --primary:oklch(83.992% 0.14479 189.268) ; */
+   --primary:#08e8de ;
+  --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
   /* Custom coral accent color */
-  --accent: oklch(83.992% 0.14479 189.268);
+  --accent: #08e8de ;
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(63.993% 0.16323 246.144);
   --destructive-foreground: oklch(0.577 0.245 27.325);
@@ -49,7 +49,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
+  --primary: #08e8de ;
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -134,5 +134,9 @@
     .from-primary\/10 {
         --tw-gradient-from: color-mix(in oklab, var(--primary) 100%, transparent);
     }
+    .to-accent\/10 {
+        --tw-gradient-to: color-mix(in oklab, var(--accent) 50%, transparent);
+    }
 }
+
 

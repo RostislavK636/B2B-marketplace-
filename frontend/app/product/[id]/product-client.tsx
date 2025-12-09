@@ -124,7 +124,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
               </Card>
 
               <div className="space-y-3">
-                <Button size="lg" className="w-full text-lg h-14 shadow-sm" asChild>
+                <Button size="lg" className="w-full text-lg h-14 shadow-sm text-primary-foreground" asChild>
                   <Link href={`/lot-purchase/${product.id}`}>Купить </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="w-full text-lg h-14 bg-transparent">
@@ -248,7 +248,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
                     <CardContent className="p-4">
                       <h3 className="font-semibold mb-2 line-clamp-2 text-balance">{item.name}</h3>
                       <div className="flex items-center justify-between">
-                        <p className="text-lg font-bold text-primary">от {item.price} ₽</p>
+                        <p className="text-lg font-bold text-primary-foreground">от {item.price} ₽</p>
                         <span className="text-sm text-muted-foreground flex items-center gap-1">
                           <span className="text-yellow-500">★</span>
                           {item.rating}

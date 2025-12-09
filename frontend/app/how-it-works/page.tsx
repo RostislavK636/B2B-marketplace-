@@ -136,7 +136,7 @@ export default function HowItWorksPage() {
                         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                           <span className="text-3xl">{step.icon}</span>
                         </div>
-                        <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">
+                        <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">
                           {step.number}
                         </div>
                         <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
@@ -155,7 +155,7 @@ export default function HowItWorksPage() {
                         <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                           <span className="text-3xl">{step.icon}</span>
                         </div>
-                        <div className="w-10 h-10 bg-accent text-white rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">
+                        <div className="w-10 h-10 bg-accent text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">
                           {step.number}
                         </div>
                         <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
@@ -217,8 +217,8 @@ export default function HowItWorksPage() {
         {/* CTA */}
         <section className="py-16 bg-gradient-to-r from-primary to-accent text-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Готовы начать?</h2>
-            <p className="text-xl mb-8 text-white/90">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary-foreground">Готовы начать?</h2>
+            <p className="text-xl mb-8 text-primary-foreground">
               Присоединяйтесь к тысячам компаний, которые уже экономят на упаковке
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -228,10 +228,10 @@ export default function HowItWorksPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="bg-transparent border-white text-white hover:bg-white/10"
+                className="bg-transparent border-primary-foreground text-white hover:bg-white/10 text-primary-foreground"
                 asChild
               >
-                <Link href="/catalog">Смотреть каталог</Link>
+                <Link href="/catalog"  >Смотреть каталог</Link>
               </Button>
             </div>
           </div>

@@ -55,7 +55,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
     <main className="flex-1 py-8">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="mb-8">
-          <Link href={`/product/${productId}`} className="text-primary hover:underline mb-4 inline-block">
+          <Link href={`/product/${productId}`} className="text-primary-foreground hover:underline mb-4 inline-block">
             ← Вернуться к товару
           </Link>
           <h1 className="text-4xl font-bold text-balance">Участие в лоте</h1>
@@ -72,7 +72,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
             <Progress value={progress} className="h-6 mb-4" />
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <p className="text-3xl font-bold text-primary">{lot.currentQuantity.toLocaleString()}</p>
+                <p className="text-3xl font-bold text-primary-foreground">{lot.currentQuantity.toLocaleString()}</p>
                 <p className="text-sm text-muted-foreground">Собрано единиц</p>
               </div>
               <div>
@@ -80,7 +80,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
                 <p className="text-sm text-muted-foreground">Осталось собрать</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-primary">{lot.totalQuantity.toLocaleString()}</p>
+                <p className="text-3xl font-bold text-primary-foreground">{lot.totalQuantity.toLocaleString()}</p>
                 <p className="text-sm text-muted-foreground">Всего в лоте</p>
               </div>
             </div>
@@ -103,7 +103,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <span className="text-muted-foreground">Цена за единицу:</span>
-                        <p className="font-bold text-xl text-primary">{lot.pricePerUnit} ₽</p>
+                        <p className="font-bold text-xl text-primary-foreground">{lot.pricePerUnit} ₽</p>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Минимальная доля:</span>
@@ -129,7 +129,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-bold text-primary">
+                    <p className="text-3xl font-bold text-primary-foreground">
                       {daysRemaining}д {hoursRemaining}ч
                     </p>
                     <p className="text-sm text-muted-foreground">До закрытия</p>
@@ -157,11 +157,11 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div>
                       <p className="text-sm text-muted-foreground mb-1">Ваше количество</p>
-                      <p className="text-2xl font-bold text-primary">{userQuantity.toLocaleString()} шт</p>
+                      <p className="text-2xl font-bold text-primary-foreground">{userQuantity.toLocaleString()} шт</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground mb-1">Ваша сумма</p>
-                      <p className="text-2xl font-bold text-primary">{userTotal.toLocaleString()} ₽</p>
+                      <p className="text-2xl font-bold text-primary-foreground">{userTotal.toLocaleString()} ₽</p>
                     </div>
                   </div>
                 </div>
@@ -211,7 +211,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
                 <ul className="space-y-3">
                   {lot.terms.map((term, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <span className="text-primary mt-1">✓</span>
+                      <span className="text-primary-foreground mt-1">✓</span>
                       <span className="text-muted-foreground">{term}</span>
                     </li>
                   ))}
@@ -245,7 +245,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between items-center pb-3 border-b border-border">
                     <span className="text-muted-foreground">Ваша доля:</span>
-                    <span className="font-bold text-xl text-primary">{selectedShare}%</span>
+                    <span className="font-bold text-xl text-primary-foreground">{selectedShare}%</span>
                   </div>
                   <div className="flex justify-between items-center pb-3 border-b border-border">
                     <span className="text-muted-foreground">Количество:</span>
@@ -257,7 +257,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
                   </div>
                   <div className="flex justify-between items-center pt-2">
                     <span className="font-bold text-lg">Итого к оплате:</span>
-                    <span className="font-bold text-2xl text-primary">{userTotal.toLocaleString()} ₽</span>
+                    <span className="font-bold text-2xl text-primary-foreground">{userTotal.toLocaleString()} ₽</span>
                   </div>
                 </div>
 
@@ -275,7 +275,7 @@ export function LotPurchaseClient({ lot, productId }: LotPurchaseClientProps) {
 
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="font-semibold mb-3">Продавец</h4>
-                  <Link href={`/seller/${lot.seller.id}`} className="text-primary hover:underline font-medium">
+                  <Link href={`/seller/${lot.seller.id}`} className="text-primary-foreground hover:underline font-medium">
                     {lot.seller.name}
                   </Link>
                   <div className="flex items-center gap-2 mt-2">
