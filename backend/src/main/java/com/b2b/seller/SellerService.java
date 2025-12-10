@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SellerService {
@@ -41,5 +42,9 @@ public class SellerService {
 
     public void deleteAllSellers() {
         sellerRepository.deleteAll();
+    }
+
+    public Optional<Seller> findSellerByEmail(String email) {
+        return sellerRepository.findByEmail(email);
     }
 }

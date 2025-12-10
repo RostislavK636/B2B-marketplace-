@@ -40,24 +40,24 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await fetch('/api/v1/auth/login', {
+      // Используем полный URL к вашему Java бэкенду
+      const response = await fetch('/api/v1/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
+        credentials: 'include', // Важно для отправки cookies
         body: JSON.stringify(requestData),
       })
 
-      if (response.ok) {
+      const data = await response.json()
+      
+      if (response.ok && data.success) {
+        // Успешный вход
         router.push("/profile")
+        router.refresh() // Обновляем страницу для обновления Header
       } else {
-        try {
-          const text = await response.text()
-          setError(text || `Ошибка входа: ${response.status}`)
-        } catch {
-          setError(`Ошибка входа: ${response.status}`)
-        }
+        setError(data.message || `Ошибка входа: ${response.status}`)
       }
     } catch (error) {
       console.error("Ошибка при входе:", error)
@@ -70,9 +70,10 @@ export default function LoginPage() {
   const handleForgotPasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsForgotPasswordLoading(true)
+    setError("")
 
     try {
-      const response = await fetch('/api/v1/auth/forgot-password', {
+      const response = await fetch('http://localhost:8080/api/v1/auth/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,10 +81,12 @@ export default function LoginPage() {
         body: JSON.stringify({ email: forgotPasswordEmail }),
       })
 
-      if (response.ok) {
+      const data = await response.json()
+      
+      if (response.ok && data.success) {
         setIsPasswordSent(true)
       } else {
-        setError("Не удалось отправить запрос на восстановление пароля")
+        setError(data.message || "Не удалось отправить запрос на восстановление пароля")
       }
     } catch (error) {
       console.error("Ошибка при восстановлении пароля:", error)
@@ -97,6 +100,7 @@ export default function LoginPage() {
     setIsPasswordSent(false)
     setForgotPasswordEmail("")
     setIsForgotPasswordOpen(false)
+    setError("")
   }
 
   return (
@@ -106,10 +110,7 @@ export default function LoginPage() {
       <main className="flex-1 py-12">
         <div className="container mx-auto px-4 max-w-md">
           <h1 className="text-4xl font-bold text-center mb-2">Вход в аккаунт</h1>
-          <p className="text-center text-muted-foreground mb-8">
-            Введите email и пароль для входа
-          </p>
-
+          <br/>
           <Card>
             <CardContent className="p-8">
               {error && (
@@ -207,11 +208,20 @@ export default function LoginPage() {
                   </div>
                 </div>
                 
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm">
+                    {error}
+                  </div>
+                )}
+                
                 <DialogFooter>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setIsForgotPasswordOpen(false)}
+                    onClick={() => {
+                      setIsForgotPasswordOpen(false)
+                      setError("")
+                    }}
                     disabled={isForgotPasswordLoading}
                   >
                     Отмена

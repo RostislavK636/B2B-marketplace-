@@ -382,13 +382,6 @@ export default function SellerDashboard() {
                 </Badge>
               </div>
               <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  onClick={checkAuthAndLoadData}
-                  disabled={loading}
-                >
-                  Обновить
-                </Button>
                 <Link href={`/profile/add-product`}>
                   <Button className="gap-2">
                     <Plus className="w-4 h-4" />
