@@ -64,6 +64,9 @@ export function Header() {
     }
   }
 
+  // Определяем куда ведет логотип
+  const logoHref = authData?.authenticated ? "/profile" : "/"
+
   // Показываем скелетон во время загрузки
   if (loading) {
     return (
@@ -93,7 +96,10 @@ export function Header() {
   return (
     <header className="border-b border-border bg-white sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold text-primary">
+        <Link 
+          href={logoHref} 
+          className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors"
+        >
           MerxOptima
         </Link>
 
