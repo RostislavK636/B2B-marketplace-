@@ -58,7 +58,7 @@ type Product = {
 }
 
 type Document = {
-  id: string
+  id: number
   name: string
   verified: boolean
 }
