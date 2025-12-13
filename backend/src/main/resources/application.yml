@@ -7,7 +7,7 @@ spring:
   session:
     store-type: none
   datasource:
-    password: password
+    password: ${DB_PASSWORD}
     url: jdbc:postgresql://postgres:5432/seller
     username: paulzverev
   jpa:

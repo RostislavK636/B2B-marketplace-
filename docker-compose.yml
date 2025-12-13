@@ -6,7 +6,7 @@ services:
     container_name: postgres
     environment:
       POSTGRES_USER: paulzverev
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: seller
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -29,9 +29,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/seller
       SPRING_DATASOURCE_USERNAME: paulzverev
-      SPRING_DATASOURCE_PASSWORD: password
-    ports:
-      - "8081:8081"
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     networks:
       - app-network
     restart: unless-stopped
