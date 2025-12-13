@@ -15,7 +15,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       "/simple-cardboard-box.png",
       "/cardboard-box-side-view.jpg",
       "/cardboard-box-top-view.jpg",
-      "/cardboard-box-stacked.jpg",
     ],
     description:
       "Прочная картонная коробка идеально подходит для транспортировки и хранения товаров. Изготовлена из трехслойного гофрокартона марки Т-22, обеспечивающего высокую прочность и защиту содержимого.",

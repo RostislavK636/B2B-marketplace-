@@ -73,7 +73,7 @@ export function Header() {
       <header className="border-b border-border bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="text-2xl font-bold text-primary animate-pulse">
-            Pack&Roll
+            MerxOptima
           </div>
           
           <nav className="hidden md:flex items-center gap-8">
@@ -100,7 +100,7 @@ export function Header() {
           href={logoHref} 
           className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors"
         >
-          Pack&Roll
+          MerxOptima
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
