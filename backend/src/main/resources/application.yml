@@ -8,11 +8,11 @@ spring:
     store-type: none
   datasource:
     password: password
-    url: jdbc:postgresql://localhost:5432/seller # postgres in production
+    url: jdbc:postgresql://postgres:5432/seller
     username: paulzverev
   jpa:
     hibernate:
-      ddl-auto: create-drop # update
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
